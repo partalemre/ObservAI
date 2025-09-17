@@ -1,15 +1,22 @@
-## Purpose
+## Summary
+
+Kısa açıklama.
 
 ## Changes
 
-## How to test
+- [ ] UI
+- [ ] API
+- [ ] DB/Prisma
+- [ ] Docs
 
-- [ ] Local build OK
-- [ ] Postman tests passed
+## Test Plan
 
-## Screenshots (if UI)
+1. Steps:
+2. Expected:
 
 ## Checklist
 
-- [ ] I followed the coding style
-- [ ] I wrote/updated tests where needed
+- [ ] Conventional Commits başlığı (feat|fix|chore|docs|refactor|test|build)
+- [ ] Lint & typecheck ok
+- [ ] Gerekliyse test(ler) eklendi/güncellendi
+- [ ] Breaking change varsa not düşüldü
