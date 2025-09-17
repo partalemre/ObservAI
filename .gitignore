@@ -14,3 +14,21 @@ __pycache__/
 .DS_Store
 .vscode
 .idea
+
+# === ObservAI ===
+node_modules/
+.pnpm-store/
+.pnp.*
+dist/
+build/
+.next/
+out/
+coverage/
+.turbo/
+*.env
+*.env.*
+apps/**/.env
+apps/**/.env.*
+infra/**/.env
+.DS_Store
+Thumbs.db

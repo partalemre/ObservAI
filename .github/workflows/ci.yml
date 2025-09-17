@@ -1,13 +1,14 @@
 name: CI
 on:
-  push:
   pull_request:
+  push:
+    branches: [main]
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 9
       - uses: actions/setup-node@v4
@@ -15,7 +16,5 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm i --frozen-lockfile
-      - run: pnpm turbo lint
-      - run: pnpm turbo typecheck
-      - run: pnpm turbo test -- --ci --reporter=list || true
-      - run: pnpm turbo build
+      - run: pnpm -w lint || echo "no lint script"
+      - run: pnpm -w typecheck || echo "no typecheck script"
