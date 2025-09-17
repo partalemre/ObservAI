@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky install",
     "lint": "turbo run lint",
-    "typecheck": "tsc -v",
+    "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev",

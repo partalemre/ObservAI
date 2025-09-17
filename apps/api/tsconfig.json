@@ -1,5 +1,14 @@
 {
   "extends": "../../packages/config/tsconfig.base.json",
-  "compilerOptions": { "outDir": "dist", "rootDir": "src" },
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@observai/types": ["../../packages/types/src"],
+      "@observai/ui": ["../../packages/ui"],
+      "@observai/config/*": ["../../packages/config/*"]
+    }
+  },
   "include": ["src"]
 }
