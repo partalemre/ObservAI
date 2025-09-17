@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@9.0.0",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky install",
     "lint": "turbo run lint",
     "typecheck": "tsc -v",
     "test": "turbo run test",
