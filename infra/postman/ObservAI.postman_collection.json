@@ -1,0 +1,40 @@
+{
+  "info": {
+    "name": "ObservAI API",
+    "_postman_id": "temp-id",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{api_url}}/health" }
+    },
+    {
+      "name": "Auth/Login",
+      "request": {
+        "method": "POST",
+        "url": "{{api_url}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"owner@cafe.com\",\"password\":\"123456\"}"
+        }
+      }
+    },
+    {
+      "name": "Menu/List",
+      "request": { "method": "GET", "url": "{{api_url}}/menu" }
+    },
+    {
+      "name": "Orders/Create",
+      "request": {
+        "method": "POST",
+        "url": "{{api_url}}/orders",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"items\":[{\"productId\":\"abc\",\"qty\":2,\"price\":95}]}"
+        }
+      }
+    }
+  ],
+  "event": []
+}

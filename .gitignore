@@ -1,0 +1,16 @@
+# Node / PNPM
+node_modules
+.pnpm-store
+dist
+.next
+out
+coverage
+.env
+.env.*
+# Python
+__pycache__/
+.venv/
+# OS / Editor
+.DS_Store
+.vscode
+.idea
