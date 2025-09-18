@@ -1,0 +1,43 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+
+@import 'tailwindcss';
+@plugin "tailwindcss-animate";
+
+@theme {
+  --color-brand: #367c96;
+  --color-accent: #ff6b35;
+  --color-ink: #33384a;
+  --color-bg-soft: #f5fdff;
+  --color-border: #e3e3e3;
+  --color-white: #ffffff;
+
+  --font-family-sans: Inter, system-ui, sans-serif;
+  --font-family-display: Poppins, Inter, system-ui, sans-serif;
+  --font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --container-center: true;
+  --container-padding: 1rem;
+  --container-screens-2xl: 1280px;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-family-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-family-display);
+  }
+
+  body {
+    @apply bg-bg-soft text-ink antialiased;
+  }
+}
