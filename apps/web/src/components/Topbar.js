@@ -3,6 +3,7 @@ import { useUIStore } from '../store/uiStore'
 import { useAuthStore } from '../store/authStore'
 import { Button } from './ui'
 import { StoreSelect } from './StoreSelect'
+import { CashDrawerBadge } from './payments/CashDrawerBadge'
 import { Menu } from 'lucide-react'
 export const Topbar = () => {
   const { sidebarOpen, setSidebarOpen } = useUIStore()
@@ -28,6 +29,7 @@ export const Topbar = () => {
           className: 'flex items-center space-x-4',
           children: [
             _jsx(StoreSelect, {}),
+            _jsx(CashDrawerBadge, {}),
             _jsxs('div', {
               className: 'flex items-center space-x-3',
               children: [

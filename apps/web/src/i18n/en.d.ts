@@ -254,4 +254,43 @@ export declare const en: {
       deleteGroup: string
     }
   }
+  payments: {
+    badge: {
+      open: string
+      closed: string
+      balance: string
+    }
+    actions: {
+      open: string
+      cashIn: string
+      cashOut: string
+      endShift: string
+      cancel: string
+      confirm: string
+    }
+    open: {
+      title: string
+      float: string
+    }
+    inout: {
+      titleIn: string
+      titleOut: string
+      amount: string
+      reason: string
+    }
+    close: {
+      title: string
+      counted: string
+      submit: string
+    }
+    errors: {
+      drawerClosed: string
+    }
+    success: {
+      opened: string
+      cashedIn: string
+      cashedOut: string
+      closed: string
+    }
+  }
 }

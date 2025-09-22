@@ -28,14 +28,21 @@ export const POS: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
 
   // Data fetching
-  const { data: categories = [], isLoading: categoriesLoading } = useCategories(
+  const { data: categoriesData, isLoading: categoriesLoading } = useCategories(
     selectedStoreId || ''
   )
-  const { data: items = [], isLoading: itemsLoading } = useItems(
+  const { data: itemsData, isLoading: itemsLoading } = useItems(
     selectedStoreId || ''
   )
-  const { data: modifierGroups = [], isLoading: modifierGroupsLoading } =
+  const { data: modifierGroupsData, isLoading: modifierGroupsLoading } =
     useModifierGroups(selectedStoreId || '')
+
+  // Normalize data to arrays
+  const categories = Array.isArray(categoriesData) ? categoriesData : []
+  const items = Array.isArray(itemsData) ? itemsData : []
+  const modifierGroups = Array.isArray(modifierGroupsData)
+    ? modifierGroupsData
+    : []
 
   // Clear cart when store changes (safety)
   useEffect(() => {
@@ -44,14 +51,15 @@ export const POS: React.FC = () => {
 
   // Filter items based on search and category
   const filteredItems = useMemo(() => {
-    let filtered = items
+    const safeItems = Array.isArray(items) ? items : []
+    let filtered = safeItems
 
     // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (item) =>
-          item.name.toLowerCase().includes(query) ||
+          item.name?.toLowerCase().includes(query) ||
           item.sku?.toLowerCase().includes(query)
       )
     }
@@ -145,13 +153,15 @@ export const POS: React.FC = () => {
             />
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredItems.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  item={item}
-                  onClick={handleProductClick}
-                />
-              ))}
+              {(Array.isArray(filteredItems) ? filteredItems : []).map(
+                (item) => (
+                  <ProductCard
+                    key={item.id}
+                    item={item}
+                    onClick={handleProductClick}
+                  />
+                )
+              )}
             </div>
           )}
         </div>

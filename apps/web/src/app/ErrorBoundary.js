@@ -14,7 +14,7 @@ export class ErrorBoundary extends React.Component {
         className: 'p-6 text-red-700',
         children: [
           _jsx('h2', {
-            className: 'text-lg font-semibold mb-2',
+            className: 'mb-2 text-lg font-semibold',
             children: 'Something went wrong',
           }),
           _jsxs('p', {

@@ -8,22 +8,32 @@ import { formatCurrency } from '../../lib/format'
 import { usePOS } from '../../store/posStore'
 import { useCreateOrder } from '../../features/pos/hooks'
 import { useOrgStore } from '../../store/orgStore'
+import { useDrawer } from '../../features/payments/hooks'
 import { t } from '../../lib/i18n'
 export const CheckoutDialog = ({ open, onClose }) => {
   const { selectedStoreId } = useOrgStore()
   const { lines, discount, note, totals, clear } = usePOS()
   const createOrderMutation = useCreateOrder()
+  const { data: drawer } = useDrawer(selectedStoreId || '')
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [cashGiven, setCashGiven] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { subtotal, discountTotal, tax, total } = totals()
   const cashAmount = parseFloat(cashGiven) || 0
   const change = Math.max(0, cashAmount - total)
+  const isDrawerOpen = drawer?.status === 'OPEN'
   const canSubmit =
     paymentMethod === 'card' ||
-    (paymentMethod === 'cash' && cashAmount >= total)
+    (paymentMethod === 'cash' && cashAmount >= total && isDrawerOpen)
   const handleQuickCash = (amount) => {
     setCashGiven(amount.toString())
+  }
+  const handleCashMethodSelect = () => {
+    if (!isDrawerOpen) {
+      toast.error(t('payments.errors.drawerClosed'))
+      return
+    }
+    setPaymentMethod('cash')
   }
   const handleSubmit = async () => {
     if (!selectedStoreId || !canSubmit) return
@@ -154,15 +164,25 @@ export const CheckoutDialog = ({ open, onClose }) => {
             _jsxs('div', {
               className: 'flex space-x-2',
               children: [
-                _jsx('button', {
+                _jsxs('button', {
                   type: 'button',
-                  onClick: () => setPaymentMethod('cash'),
+                  onClick: handleCashMethodSelect,
+                  disabled: !isDrawerOpen,
                   className: `flex-1 rounded-lg border-2 p-3 text-center font-medium transition-colors ${
                     paymentMethod === 'cash'
                       ? 'border-brand bg-brand/5 text-brand'
-                      : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                      : isDrawerOpen
+                        ? 'border-gray-200 text-gray-700 hover:border-gray-300'
+                        : 'cursor-not-allowed border-gray-200 text-gray-400 opacity-50'
                   }`,
-                  children: t('pos.cash'),
+                  children: [
+                    t('pos.cash'),
+                    !isDrawerOpen &&
+                      _jsx('span', {
+                        className: 'ml-1 text-xs',
+                        children: '(drawer closed)',
+                      }),
+                  ],
                 }),
                 _jsx('button', {
                   type: 'button',

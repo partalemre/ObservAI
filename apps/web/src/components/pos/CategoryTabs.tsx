@@ -17,7 +17,8 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
   allLabel = 'All',
   className,
 }) => {
-  const sortedCategories = [...categories].sort((a, b) => a.sort - b.sort)
+  const safeCategories = Array.isArray(categories) ? categories : []
+  const sortedCategories = [...safeCategories].sort((a, b) => a.sort - b.sort)
 
   return (
     <div className={cn('flex space-x-1 overflow-x-auto pb-2', className)}>

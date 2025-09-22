@@ -127,6 +127,18 @@ export const menuDb = {
     },
   ],
 }
+// --- In-memory cash drawer DB ---
+export const cashDb = {
+  byStore: {
+    s1: {
+      state: {
+        status: 'CLOSED',
+        balance: 0,
+      },
+      moves: [],
+    },
+  },
+}
 export const handlers = [
   // Login: "fail" içeren email ya da "wrong" şifre → 401
   http.post('*/auth/login', async ({ request }) => {
@@ -206,6 +218,22 @@ export const handlers = [
     const body = await request.json()
     if (!body?.lines?.length) {
       return HttpResponse.json({ message: 'No lines' }, { status: 400 })
+    }
+    // Record cash payment if drawer is open
+    const storeId = body.storeId || 's1'
+    const cashPayment = body.payments?.find((p) => p.method === 'cash')
+    if (cashPayment) {
+      const rec = cashDb.byStore[storeId]
+      if (rec && rec.state.status === 'OPEN') {
+        rec.state.balance += cashPayment.amount
+        rec.moves.push({
+          id: `m-${Date.now()}`,
+          ts: new Date().toISOString(),
+          type: 'SALE',
+          amount: cashPayment.amount,
+          orderId: 'ORD-1001',
+        })
+      }
     }
     return ok({ orderId: 'ORD-1001' })
   }),
@@ -344,6 +372,96 @@ export const handlers = [
   http.post('*/uploads', async () =>
     ok({ url: `https://picsum.photos/seed/${Date.now()}/200/200` })
   ),
+  // Cash Drawer APIs
+  // GET drawer
+  http.get('*/cash-drawer', ({ request }) => {
+    const url = new URL(request.url)
+    const storeId = url.searchParams.get('storeId') || 's1'
+    const rec =
+      cashDb.byStore[storeId] ??
+      (cashDb.byStore[storeId] = {
+        state: { status: 'CLOSED', balance: 0 },
+        moves: [],
+      })
+    return ok(rec.state)
+  }),
+  // GET movements
+  http.get('*/cash-drawer/movements', ({ request }) => {
+    const url = new URL(request.url)
+    const storeId = url.searchParams.get('storeId') || 's1'
+    const rec =
+      cashDb.byStore[storeId] ??
+      (cashDb.byStore[storeId] = {
+        state: { status: 'CLOSED', balance: 0 },
+        moves: [],
+      })
+    return ok({ items: rec.moves })
+  }),
+  // POST open
+  http.post('*/cash-drawer/open', async ({ request }) => {
+    const { storeId, floatAmount } = await request.json()
+    const rec =
+      cashDb.byStore[storeId] ??
+      (cashDb.byStore[storeId] = {
+        state: { status: 'CLOSED', balance: 0 },
+        moves: [],
+      })
+    rec.state = {
+      status: 'OPEN',
+      openedAt: new Date().toISOString(),
+      openedBy: 'clerk',
+      floatAmount,
+      balance: floatAmount,
+    }
+    return ok({ ok: true })
+  }),
+  // POST in
+  http.post('*/cash-drawer/in', async ({ request }) => {
+    const { storeId, amount, reason } = await request.json()
+    const rec = cashDb.byStore[storeId]
+    if (!rec || rec.state.status !== 'OPEN')
+      return HttpResponse.json({ error: 'closed' }, { status: 400 })
+    rec.state.balance += amount
+    rec.moves.push({
+      id: `m-${Date.now()}`,
+      ts: new Date().toISOString(),
+      type: 'CASH_IN',
+      amount,
+      reason,
+    })
+    return ok({ ok: true })
+  }),
+  // POST out
+  http.post('*/cash-drawer/out', async ({ request }) => {
+    const { storeId, amount, reason } = await request.json()
+    const rec = cashDb.byStore[storeId]
+    if (!rec || rec.state.status !== 'OPEN')
+      return HttpResponse.json({ error: 'closed' }, { status: 400 })
+    rec.state.balance -= amount
+    rec.moves.push({
+      id: `m-${Date.now()}`,
+      ts: new Date().toISOString(),
+      type: 'CASH_OUT',
+      amount: -Math.abs(amount),
+      reason,
+    })
+    return ok({ ok: true })
+  }),
+  // POST close
+  http.post('*/cash-drawer/close', async ({ request }) => {
+    const { storeId, countedTotal } = await request.json()
+    const rec = cashDb.byStore[storeId]
+    if (!rec) return ok({ ok: true })
+    rec.moves.push({
+      id: `m-${Date.now()}`,
+      ts: new Date().toISOString(),
+      type: 'ADJUSTMENT',
+      amount: countedTotal - rec.state.balance,
+      reason: 'EOD adjust',
+    })
+    rec.state = { status: 'CLOSED', balance: 0 }
+    return ok({ ok: true })
+  }),
 ]
 const server = setupServer(...handlers)
 // Mock window.location
@@ -392,7 +510,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }))
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 // Reset mocks before each test
-beforeEach(() => {
+beforeAll(() => {
   vi.clearAllMocks()
   localStorageMock.getItem.mockReturnValue(null)
 })

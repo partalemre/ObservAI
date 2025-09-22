@@ -1,4 +1,4 @@
-import { jsx as _jsx } from 'react/jsx-runtime'
+import { jsx as _jsx, jsxs as _jsxs } from 'react/jsx-runtime'
 import {
   createBrowserRouter,
   createMemoryRouter,
@@ -53,9 +53,58 @@ export const RootRedirect = () => {
   }
   return _jsx(Home, {})
 }
+const NotFound = () =>
+  _jsxs('div', {
+    className: 'p-6 text-slate-700',
+    children: [
+      _jsx('h1', {
+        className: 'mb-2 text-xl font-bold',
+        children: 'Page not found',
+      }),
+      _jsx('p', {
+        className: 'mb-4',
+        children: "This page doesn't exist. You can return to dashboard.",
+      }),
+      _jsx('a', {
+        href: '/dashboard',
+        className: 'text-blue-600 underline',
+        children: 'Go to dashboard',
+      }),
+    ],
+  })
 export const routesConfig = [
   { path: '/login', element: _jsx(Login, {}) }, // public
   { path: '/', element: _jsx(RootRedirect, {}) }, // smart redirect
+  // Redirect aliases for incorrect URLs (backward compatibility)
+  {
+    path: '/dashboard/pos',
+    element: _jsx(Navigate, { to: '/pos', replace: true }),
+  },
+  {
+    path: '/dashboard/menu',
+    element: _jsx(Navigate, { to: '/menu', replace: true }),
+  },
+  {
+    path: '/dashboard/kitchen',
+    element: _jsx(Navigate, { to: '/kitchen', replace: true }),
+  },
+  {
+    path: '/dashboard/inventory',
+    element: _jsx(Navigate, { to: '/inventory', replace: true }),
+  },
+  {
+    path: '/dashboard/alerts',
+    element: _jsx(Navigate, { to: '/alerts', replace: true }),
+  },
+  {
+    path: '/dashboard/settings',
+    element: _jsx(Navigate, { to: '/settings', replace: true }),
+  },
+  // Catch-all for undefined dashboard paths
+  {
+    path: '/dashboard/*',
+    element: _jsx(Navigate, { to: '/dashboard', replace: true }),
+  },
   {
     element: _jsx(ProtectedLayout, {}), // guard + AppShell
     children: [
@@ -68,6 +117,8 @@ export const routesConfig = [
       { path: '/settings', element: _jsx(Settings, {}) },
     ],
   },
+  // Global 404 fallback
+  { path: '*', element: _jsx(NotFound, {}) },
 ]
 export const router = createBrowserRouter(routesConfig)
 // test ortamı için yardımcı

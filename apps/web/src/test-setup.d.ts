@@ -38,5 +38,14 @@ export declare const menuDb: {
     }[]
   }[]
 }
+export declare const cashDb: {
+  byStore: Record<
+    string,
+    {
+      state: import('./features/payments/types').CashDrawerState
+      moves: any[]
+    }
+  >
+}
 export declare const handlers: import('msw').HttpHandler[]
 export {}
