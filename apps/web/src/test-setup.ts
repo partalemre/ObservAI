@@ -93,6 +93,51 @@ export const inventoryDb: InvDB = {
   ],
 }
 
+// --- In-memory menu DB ---
+let seq = 100
+const newId = (prefix: string) => `${prefix}-${++seq}`
+
+export const menuDb = {
+  categories: [
+    { id: 'cat-1', name: 'Coffee', sort: 1, active: true },
+    { id: 'cat-2', name: 'Desserts', sort: 2, active: true },
+  ],
+  items: [
+    {
+      id: 'it-1',
+      name: 'Americano',
+      price: 45,
+      categoryId: 'cat-1',
+      active: true,
+      soldOut: false,
+      sku: 'AM-001',
+      modifierGroupIds: [],
+    },
+    {
+      id: 'it-2',
+      name: 'Latte',
+      price: 60,
+      categoryId: 'cat-1',
+      active: true,
+      soldOut: false,
+      sku: 'LA-001',
+      modifierGroupIds: ['grp-1'],
+    },
+  ],
+  groups: [
+    {
+      id: 'grp-1',
+      name: 'Milk type',
+      min: 1,
+      max: 1,
+      options: [
+        { id: 'opt-1', name: 'Full-fat', priceDelta: 0 },
+        { id: 'opt-2', name: 'Oat milk', priceDelta: 6 },
+      ],
+    },
+  ],
+}
+
 export const handlers = [
   // Login: "fail" içeren email ya da "wrong" şifre → 401
   http.post('*/auth/login', async ({ request }) => {
@@ -232,6 +277,99 @@ export const handlers = [
     }
     return HttpResponse.json({ adjustmentId: 'AD-2001' }, { status: 200 })
   }),
+
+  // Menu Categories
+  http.get('*/menu/categories', () =>
+    ok({ categories: menuDb.categories.sort((a, b) => a.sort - b.sort) })
+  ),
+  http.post('*/menu/categories', async ({ request }) => {
+    const body = (await request.json()) as any
+    const id = newId('cat')
+    menuDb.categories.push({
+      id,
+      name: body.name,
+      sort: menuDb.categories.length + 1,
+      active: true,
+    })
+    return ok({ id })
+  }),
+  http.patch('*/menu/categories/:id', async ({ params, request }) => {
+    const id = (params as any).id
+    const patch = (await request.json()) as any
+    const category = menuDb.categories.find((c) => c.id === id)
+    if (category) Object.assign(category, patch)
+    return ok({ ok: true })
+  }),
+  http.delete('*/menu/categories/:id', ({ params }) => {
+    const id = (params as any).id
+    menuDb.categories = menuDb.categories.filter((c) => c.id !== id)
+    return ok({ ok: true })
+  }),
+  http.put('*/menu/categories/reorder', async ({ request }) => {
+    const { order } = (await request.json()) as any
+    order.forEach((id: string, idx: number) => {
+      const c = menuDb.categories.find((x) => x.id === id)
+      if (c) c.sort = idx + 1
+    })
+    return ok({ ok: true })
+  }),
+
+  // Menu Items
+  http.get('*/menu/items', () => ok({ items: menuDb.items })),
+  http.post('*/menu/items', async ({ request }) => {
+    const body = (await request.json()) as any
+    const id = newId('it')
+    menuDb.items.push({
+      id,
+      ...body,
+      modifierGroupIds: body.modifierGroupIds ?? [],
+    })
+    return ok({ id })
+  }),
+  http.patch('*/menu/items/:id', async ({ params, request }) => {
+    const id = (params as any).id
+    const patch = (await request.json()) as any
+    const item = menuDb.items.find((i) => i.id === id)
+    if (item) Object.assign(item, patch)
+    return ok({ ok: true })
+  }),
+  http.delete('*/menu/items/:id', ({ params }) => {
+    const id = (params as any).id
+    menuDb.items = menuDb.items.filter((i) => i.id !== id)
+    return ok({ ok: true })
+  }),
+
+  // Modifier Groups
+  http.get('*/menu/modifier-groups', () => ok({ groups: menuDb.groups })),
+  http.post('*/menu/modifier-groups', async ({ request }) => {
+    const b = (await request.json()) as any
+    const id = newId('grp')
+    menuDb.groups.push({
+      id,
+      name: b.name,
+      min: b.min,
+      max: b.max,
+      options: (b.options || []).map((o: any) => ({ id: newId('opt'), ...o })),
+    })
+    return ok({ id })
+  }),
+  http.patch('*/menu/modifier-groups/:id', async ({ params, request }) => {
+    const id = (params as any).id
+    const p = (await request.json()) as any
+    const group = menuDb.groups.find((g) => g.id === id)
+    if (group) Object.assign(group, p)
+    return ok({ ok: true })
+  }),
+  http.delete('*/menu/modifier-groups/:id', ({ params }) => {
+    const id = (params as any).id
+    menuDb.groups = menuDb.groups.filter((g) => g.id !== id)
+    return ok({ ok: true })
+  }),
+
+  // Image Upload
+  http.post('*/uploads', async () =>
+    ok({ url: `https://picsum.photos/seed/${Date.now()}/200/200` })
+  ),
 ]
 
 const server = setupServer(...handlers)
