@@ -36,7 +36,9 @@ export const Sidebar: React.FC = () => {
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden" />
       )}
 
-      <div
+      <aside
+        data-testid="sidebar"
+        role="navigation"
         className={cn(
           'bg-ink fixed top-0 left-0 z-50 h-full text-white/90 transition-all duration-300 ease-in-out lg:relative lg:z-auto',
           sidebarOpen ? 'w-64' : 'w-16'
@@ -88,7 +90,7 @@ export const Sidebar: React.FC = () => {
             })}
           </nav>
         </div>
-      </div>
+      </aside>
     </>
   )
 }

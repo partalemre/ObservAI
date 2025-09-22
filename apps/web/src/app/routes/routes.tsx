@@ -1,5 +1,9 @@
 import React from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import {
+  createBrowserRouter,
+  createMemoryRouter,
+  Navigate,
+} from 'react-router-dom'
 import { AppShell } from '../AppShell'
 import {
   Dashboard,
@@ -36,47 +40,25 @@ export const ProtectedLayout: React.FC = () => {
   return <AppShell />
 }
 
-export const router = createBrowserRouter([
+export const routesConfig = [
+  { path: '/login', element: <Login /> }, // public
+  { path: '/', element: <Home /> }, // public landing
   {
-    path: '/',
-    element: <Home />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/dashboard',
-    element: <ProtectedLayout />,
+    element: <ProtectedLayout />, // guard + AppShell
     children: [
-      {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: 'pos',
-        element: <POS />,
-      },
-      {
-        path: 'menu',
-        element: <Menu />,
-      },
-      {
-        path: 'kitchen',
-        element: <Kitchen />,
-      },
-      {
-        path: 'inventory',
-        element: <Inventory />,
-      },
-      {
-        path: 'alerts',
-        element: <Alerts />,
-      },
-      {
-        path: 'settings',
-        element: <Settings />,
-      },
+      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/pos', element: <POS /> },
+      { path: '/menu', element: <Menu /> },
+      { path: '/kitchen', element: <Kitchen /> },
+      { path: '/inventory', element: <Inventory /> },
+      { path: '/alerts', element: <Alerts /> },
+      { path: '/settings', element: <Settings /> },
     ],
   },
-])
+]
+
+export const router = createBrowserRouter(routesConfig)
+
+// test ortamı için yardımcı
+export const createTestRouter = (initialPath = '/') =>
+  createMemoryRouter(routesConfig, { initialEntries: [initialPath] })
