@@ -3,6 +3,7 @@ import { useUIStore } from '../store/uiStore'
 import { useAuthStore } from '../store/authStore'
 import { Button } from './ui'
 import { StoreSelect } from './StoreSelect'
+import { CashDrawerBadge } from './payments/CashDrawerBadge'
 import { t } from '../lib/i18n'
 import { Menu } from 'lucide-react'
 
@@ -25,6 +26,7 @@ export const Topbar: React.FC = () => {
 
         <div className="flex items-center space-x-4">
           <StoreSelect />
+          <CashDrawerBadge />
 
           <div className="flex items-center space-x-3">
             <div className="hidden text-sm sm:block">

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
+import { t } from '../../lib/i18n'
 import {
   useCategories,
   useDeleteCategory,
@@ -16,7 +16,6 @@ interface CategoryListProps {
 }
 
 export function CategoryList({ storeId }: CategoryListProps) {
-  const { t } = useTranslation()
   const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(
     null
   )

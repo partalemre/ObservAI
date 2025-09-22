@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
+import { t } from '../../lib/i18n'
 import { useCreateCategory, usePatchCategory } from '../../features/menu/hooks'
 import type { MenuCategory } from '../../features/menu/types'
 
@@ -16,7 +16,6 @@ export function CategoryFormDialog({
   category,
   onClose,
 }: CategoryFormDialogProps) {
-  const { t } = useTranslation()
   const [name, setName] = useState(category?.name || '')
   const [active, setActive] = useState(category?.active ?? true)
 

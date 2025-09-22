@@ -1,4 +1,4 @@
-import { api } from '../../lib/api'
+import api from '../../lib/api'
 import type { MenuCategory, MenuItem, ModifierGroup } from './types'
 
 export const getCategories = async (

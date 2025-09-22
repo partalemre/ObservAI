@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
+import { t } from '../../lib/i18n'
 import {
   useItems,
   useDeleteItem,
@@ -18,7 +18,6 @@ interface ItemListProps {
 }
 
 export function ItemList({ storeId }: ItemListProps) {
-  const { t } = useTranslation()
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<MenuItem | null>(null)
   const [assigningItem, setAssigningItem] = useState<MenuItem | null>(null)

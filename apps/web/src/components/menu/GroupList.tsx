@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
 import { Modal } from '../ui/Modal'
+import { t } from '../../lib/i18n'
 import { useGroups, useDeleteGroup } from '../../features/menu/hooks'
 import { GroupFormDialog } from './GroupFormDialog'
 import type { ModifierGroup } from '../../features/menu/types'
@@ -11,7 +11,6 @@ interface GroupListProps {
 }
 
 export function GroupList({ storeId }: GroupListProps) {
-  const { t } = useTranslation()
   const [editingGroup, setEditingGroup] = useState<ModifierGroup | null>(null)
   const [deletingGroup, setDeletingGroup] = useState<ModifierGroup | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)

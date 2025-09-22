@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
+import { t } from '../../lib/i18n'
 import { useUploadImage } from '../../features/menu/hooks'
 
 interface ImagePickerProps {
@@ -9,7 +9,6 @@ interface ImagePickerProps {
 }
 
 export function ImagePicker({ value, onChange }: ImagePickerProps) {
-  const { t } = useTranslation()
   const [dragOver, setDragOver] = useState(false)
   const uploadImage = useUploadImage()
 

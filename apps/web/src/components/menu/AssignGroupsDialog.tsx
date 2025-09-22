@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
+import { t } from '../../lib/i18n'
 import { useGroups, usePatchItem } from '../../features/menu/hooks'
 import type { MenuItem } from '../../features/menu/types'
 
@@ -16,7 +16,6 @@ export function AssignGroupsDialog({
   item,
   onClose,
 }: AssignGroupsDialogProps) {
-  const { t } = useTranslation()
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>(
     item.modifierGroupIds || []
   )

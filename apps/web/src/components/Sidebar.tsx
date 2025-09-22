@@ -17,12 +17,12 @@ import { BrandMark } from './brand/BrandMark'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'POS', href: '/dashboard/pos', icon: BarChart3 },
-  { name: 'Menu', href: '/dashboard/menu', icon: UtensilsCrossed },
-  { name: 'Kitchen', href: '/dashboard/kitchen', icon: ChefHat },
-  { name: 'Inventory', href: '/dashboard/inventory', icon: Package },
-  { name: 'Alerts', href: '/dashboard/alerts', icon: Bell },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'POS', href: '/pos', icon: BarChart3 },
+  { name: 'Menu', href: '/menu', icon: UtensilsCrossed },
+  { name: 'Kitchen', href: '/kitchen', icon: ChefHat },
+  { name: 'Inventory', href: '/inventory', icon: Package },
+  { name: 'Alerts', href: '/alerts', icon: Bell },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ]
 
 export const Sidebar: React.FC = () => {

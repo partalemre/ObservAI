@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/Button'
+import { t } from '../../lib/i18n'
 import {
   useCreateItem,
   usePatchItem,
@@ -20,7 +20,6 @@ export function ItemFormDrawer({
   item,
   onClose,
 }: ItemFormDrawerProps) {
-  const { t } = useTranslation()
   const [name, setName] = useState(item?.name || '')
   const [price, setPrice] = useState(item?.price?.toString() || '')
   const [categoryId, setCategoryId] = useState(item?.categoryId || '')

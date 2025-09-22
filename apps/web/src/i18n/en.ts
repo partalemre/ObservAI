@@ -242,4 +242,34 @@ export const en = {
       deleteGroup: 'Delete this group?',
     },
   },
+  payments: {
+    badge: { open: 'Drawer open', closed: 'Drawer closed', balance: 'Balance' },
+    actions: {
+      open: 'Open drawer',
+      cashIn: 'Cash in',
+      cashOut: 'Cash out',
+      endShift: 'End shift',
+      cancel: 'Cancel',
+      confirm: 'Confirm',
+    },
+    open: { title: 'Open cash drawer', float: 'Opening float' },
+    inout: {
+      titleIn: 'Cash in',
+      titleOut: 'Cash out',
+      amount: 'Amount',
+      reason: 'Reason',
+    },
+    close: {
+      title: 'End shift & close',
+      counted: 'Counted total',
+      submit: 'Close drawer',
+    },
+    errors: { drawerClosed: 'Cash drawer is closed. Open it first.' },
+    success: {
+      opened: 'Drawer opened',
+      cashedIn: 'Cash added',
+      cashedOut: 'Cash removed',
+      closed: 'Drawer closed',
+    },
+  },
 }

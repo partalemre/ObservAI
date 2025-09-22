@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
+import { t } from '../../lib/i18n'
 import { useCreateGroup, usePatchGroup } from '../../features/menu/hooks'
 import type { ModifierGroup, ModifierOption } from '../../features/menu/types'
 
@@ -22,7 +22,6 @@ export function GroupFormDialog({
   group,
   onClose,
 }: GroupFormDialogProps) {
-  const { t } = useTranslation()
   const [name, setName] = useState(group?.name || '')
   const [min, setMin] = useState(group?.min?.toString() || '0')
   const [max, setMax] = useState(group?.max?.toString() || '1')
