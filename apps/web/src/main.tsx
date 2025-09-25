@@ -9,6 +9,15 @@ import { useAuthStore } from './store/authStore'
 import { ErrorBoundary } from './app/ErrorBoundary'
 import './styles/globals.css'
 
+// --- DEV ONLY: boot MSW so demo/owner can log in ---
+if (import.meta.env.DEV) {
+  const { worker } = await import('./mocks/browser')
+  await worker.start({
+    onUnhandledRequest: 'bypass',
+    serviceWorker: { url: '/mockServiceWorker.js' },
+  })
+}
+
 const App: React.FC = () => {
   React.useEffect(() => {
     useAuthStore.getState().initialize()

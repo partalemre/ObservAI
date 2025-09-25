@@ -1,330 +1,161 @@
 import React from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import {
-  CheckCircle,
-  BarChart3,
-  UtensilsCrossed,
-  ChefHat,
-  Package,
-  Users,
-  Brain,
-  ArrowRight,
-  Clock,
-  TrendingUp,
-  DollarSign,
-} from 'lucide-react'
 
-import { Button, Badge, Card } from '../../components/ui'
-import { BrandLogo, BrandMark } from '../../components/brand/BrandLogo'
-import { GradientBG } from '../../components/primitives/GradientBG'
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
+// Simple brand token
+const brand = {
+  from: '#0ea5e9', // sky-500
+  to: '#22d3ee', // cyan-400
 }
 
-const staggerChildren = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-}
+const FadeUp: React.FC<{ delay?: number; children: React.ReactNode }> = ({
+  delay = 0,
+  children,
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.4 }}
+    transition={{ duration: 0.6, ease: 'easeOut', delay }}
+  >
+    {children}
+  </motion.div>
+)
 
-export const Home: React.FC = () => {
+export default function Home() {
+  const { scrollYProgress } = useScroll()
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [0.8, 0.3])
+
   return (
-    <div className="bg-bg-soft min-h-screen">
-      {/* Hero Section */}
-      <GradientBG className="relative overflow-hidden">
-        <div className="container mx-auto px-4 py-20 lg:py-32">
-          <motion.div
-            className="mx-auto max-w-4xl text-center"
-            variants={staggerChildren}
-            initial="initial"
-            animate="animate"
-          >
-            <motion.div className="mb-6" variants={fadeInUp}>
-              <Badge variant="outline" className="mb-8">
-                Built for modern hospitality
-              </Badge>
-            </motion.div>
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      {/* animated gradient canvas */}
+      <motion.div
+        aria-hidden
+        style={{ opacity: bgOpacity }}
+        className="pointer-events-none absolute inset-0 -z-10"
+      >
+        <div className="absolute -inset-[20%] bg-[radial-gradient(ellipse_at_top_left,rgba(14,165,233,0.35),transparent_60%),radial-gradient(ellipse_at_bottom_right,rgba(34,211,238,0.35),transparent_55%)] blur-2xl" />
+      </motion.div>
 
-            <motion.h1
-              className="font-display text-ink mb-6 text-5xl font-bold tracking-tight lg:text-7xl"
-              variants={fadeInUp}
-            >
-              Operate smarter with <span className="text-brand">ObservAI</span>
-            </motion.h1>
-
-            <motion.p
-              className="text-ink/70 mx-auto mb-8 max-w-2xl text-xl leading-relaxed"
-              variants={fadeInUp}
-            >
+      {/* hero */}
+      <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 pt-28 pb-24 md:grid-cols-2">
+        <FadeUp>
+          <div>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 backdrop-blur">
+              Built for modern hospitality
+            </div>
+            <h1 className="text-4xl leading-tight font-extrabold md:text-6xl">
+              Operate smarter with
+              <br />
+              <span className="bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent">
+                ObservAI
+              </span>
+            </h1>
+            <p className="mt-5 max-w-xl text-white/70">
               Unify POS, menu, kitchen, inventory and AI insights in one place.
-            </motion.p>
-
-            <motion.div
-              className="mb-16 flex flex-col justify-center gap-4 sm:flex-row"
-              variants={fadeInUp}
-            >
-              <Button size="lg" variant="accent" className="px-8 py-4 text-lg">
-                Request a demo
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="px-8 py-4 text-lg"
-                asChild
-              >
-                <Link to="/login">Sign in</Link>
-              </Button>
-            </motion.div>
-
-            {/* App Mock */}
-            <motion.div
-              className="relative mx-auto max-w-5xl"
-              variants={fadeInUp}
-            >
-              <div className="border-border rounded-3xl border bg-white p-8 shadow-2xl">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {/* Dashboard mockup cards */}
-                  <Card className="p-4">
-                    <div className="mb-4 flex items-center gap-3">
-                      <BarChart3 className="text-brand h-5 w-5" />
-                      <span className="text-ink font-semibold">Analytics</span>
-                    </div>
-                    <div className="from-brand/20 to-accent/20 h-20 rounded-xl bg-gradient-to-br"></div>
-                  </Card>
-
-                  <Card className="p-4">
-                    <div className="mb-4 flex items-center gap-3">
-                      <UtensilsCrossed className="text-brand h-5 w-5" />
-                      <span className="text-ink font-semibold">Orders</span>
-                    </div>
-                    <div className="from-accent/20 to-brand/20 h-20 rounded-xl bg-gradient-to-br"></div>
-                  </Card>
-
-                  <Card className="p-4">
-                    <div className="mb-4 flex items-center gap-3">
-                      <Brain className="text-brand h-5 w-5" />
-                      <span className="text-ink font-semibold">
-                        AI Insights
-                      </span>
-                    </div>
-                    <div className="from-brand/20 to-accent/20 h-20 rounded-xl bg-gradient-to-br"></div>
-                  </Card>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </GradientBG>
-
-      {/* Logo Strip */}
-      <section className="border-border border-y bg-white py-16">
-        <div className="container mx-auto px-4">
-          <p className="text-ink/60 mb-8 text-center font-medium">
-            Trusted by restaurants worldwide
-          </p>
-          <div className="flex items-center justify-center gap-12 opacity-40">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className="bg-ink/10 flex h-12 w-24 items-center justify-center rounded-lg"
-              >
-                <span className="text-ink/40 font-semibold">Logo {i}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Value Stats */}
-      <section className="bg-bg-soft py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3"
-            variants={staggerChildren}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            <motion.div variants={fadeInUp}>
-              <Card className="p-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100">
-                  <DollarSign className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="font-display text-ink mb-2 text-2xl font-bold">
-                  30%
-                </h3>
-                <p className="text-ink/70">Reduce ops cost</p>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={fadeInUp}>
-              <Card className="p-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100">
-                  <TrendingUp className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="font-display text-ink mb-2 text-2xl font-bold">
-                  25%
-                </h3>
-                <p className="text-ink/70">Increase AOV</p>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={fadeInUp}>
-              <Card className="p-8 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-100">
-                  <Clock className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="font-display text-ink mb-2 text-2xl font-bold">
-                  Real-time
-                </h3>
-                <p className="text-ink/70">See peak hours</p>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="bg-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="mb-16 text-center">
-            <h2 className="font-display text-ink mb-4 text-4xl font-bold">
-              Everything you need to run your restaurant
-            </h2>
-            <p className="text-ink/70 mx-auto max-w-2xl text-xl">
-              From orders to insights, manage every aspect of your business with
-              one platform
+              Clarity, control and margin—on every shift.
             </p>
-          </div>
-
-          <motion.div
-            className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-            variants={staggerChildren}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                icon: BarChart3,
-                title: 'Smart POS',
-                description: 'Lightning-fast checkout with built-in analytics',
-              },
-              {
-                icon: UtensilsCrossed,
-                title: 'Dynamic Menu',
-                description: 'Real-time menu updates and pricing optimization',
-              },
-              {
-                icon: ChefHat,
-                title: 'Kitchen Display',
-                description: 'Streamlined order management for your kitchen',
-              },
-              {
-                icon: Package,
-                title: 'Inventory Alerts',
-                description: 'Never run out with smart inventory tracking',
-              },
-              {
-                icon: Users,
-                title: 'Staff & Tips',
-                description:
-                  'Team management and tip distribution (coming soon)',
-                badge: 'Soon',
-              },
-              {
-                icon: Brain,
-                title: 'AI Insights',
-                description: 'Predictive analytics and business intelligence',
-              },
-            ].map((feature, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full p-6 transition-shadow hover:shadow-lg">
-                  <div className="bg-brand/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                    <feature.icon className="text-brand h-6 w-6" />
-                  </div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <h3 className="font-display text-ink text-lg font-semibold">
-                      {feature.title}
-                    </h3>
-                    {feature.badge && (
-                      <Badge variant="outline" size="sm">
-                        {feature.badge}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-ink/70">{feature.description}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Integrations */}
-      <section className="bg-bg-soft py-16">
-        <div className="container mx-auto px-4">
-          <div className="mb-12 text-center">
-            <h2 className="font-display text-ink mb-4 text-3xl font-bold">
-              Connects with your favorite tools
-            </h2>
-          </div>
-
-          <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-4">
-            {['Yemeksepeti', 'Getir', 'Trendyol', 'Open API'].map(
-              (integration, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="px-4 py-2 text-sm"
-                >
-                  {integration}
-                </Badge>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-border border-t bg-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-between md:flex-row">
-            <BrandLogo size="md" />
-
-            <div className="mt-8 flex items-center gap-8 md:mt-0">
-              <Link
-                to="/docs"
-                className="text-ink/70 hover:text-ink transition-colors"
-              >
-                Docs
-              </Link>
-              <Link
-                to="/changelog"
-                className="text-ink/70 hover:text-ink transition-colors"
-              >
-                Changelog
-              </Link>
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/contact"
-                className="text-ink/70 hover:text-ink transition-colors"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-3 font-semibold text-slate-900 shadow-lg shadow-cyan-500/20 hover:opacity-95"
               >
-                Contact
+                Request a demo →
+              </Link>
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white/90 hover:bg-white/10"
+              >
+                Sign in
               </Link>
             </div>
           </div>
+        </FadeUp>
 
-          <div className="border-border text-ink/60 mt-8 border-t pt-8 text-center">
-            <p>&copy; 2024 ObservAI. All rights reserved.</p>
+        <FadeUp delay={0.1}>
+          {/* glass KPI deck */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              { k: 'Average Daily Sales', v: '$3,495', s: '+3.7%' },
+              { k: 'CoGS', v: '31.4%', s: '-4.5%' },
+              { k: 'Labor Ratio', v: '25.2%', s: '+1.0%' },
+              { k: 'Occupancy', v: '8.2%', s: '+0.3%' },
+            ].map((x, i) => (
+              <motion.div
+                key={x.k}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-md"
+              >
+                <div className="text-xs text-white/60">{x.k}</div>
+                <div className="mt-2 text-2xl font-bold">{x.v}</div>
+                <div className="mt-1 text-xs text-emerald-300">{x.s}</div>
+              </motion.div>
+            ))}
           </div>
+        </FadeUp>
+      </section>
+
+      {/* modules */}
+      <section className="mx-auto max-w-7xl px-6 pb-28">
+        <FadeUp>
+          <h2 className="mb-6 text-2xl font-bold tracking-tight text-white/90 md:text-3xl">
+            Everything connected
+          </h2>
+        </FadeUp>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              t: 'POS',
+              d: 'Fast, keyboard-friendly checkout with cash drawer control',
+              to: '/pos',
+            },
+            {
+              t: 'Kitchen',
+              d: 'Prioritized tickets, expo view and bump bar',
+              to: '/kitchen',
+            },
+            {
+              t: 'Menu',
+              d: 'Smart modifiers and pricing; bulk updates in seconds',
+              to: '/menu',
+            },
+            {
+              t: 'Inventory',
+              d: 'Par levels, variance and vendor price watch',
+              to: '/inventory',
+            },
+            {
+              t: 'Alerts',
+              d: 'Thresholds & escalations to keep shifts on track',
+              to: '/alerts',
+            },
+            {
+              t: 'Settings',
+              d: 'Org, stores, taxes and roles',
+              to: '/settings',
+            },
+          ].map((m, i) => (
+            <FadeUp key={m.t} delay={0.05 * i}>
+              <Link
+                to={m.to}
+                className="group block rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-0 transition hover:bg-white/[0.07]"
+              >
+                <div className="mb-1 text-sm text-white/60">Module</div>
+                <div className="text-lg font-semibold">{m.t}</div>
+                <p className="mt-2 text-sm text-white/65">{m.d}</p>
+                <div className="mt-4 inline-flex items-center gap-2 text-cyan-300 opacity-0 transition group-hover:opacity-100">
+                  Open {m.t} <span>→</span>
+                </div>
+              </Link>
+            </FadeUp>
+          ))}
         </div>
+      </section>
+
+      {/* footer */}
+      <footer className="mx-auto max-w-7xl px-6 pb-10 text-sm text-white/50">
+        © {new Date().getFullYear()} ObservAI
       </footer>
     </div>
   )

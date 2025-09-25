@@ -9,7 +9,9 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  --color-brand: #367c96;
+  --color-brand: #22d3ee;
+  --color-brand-500: #22d3ee;
+  --color-brand-600: #06b6d4;
   --color-accent: #ff6b35;
   --color-ink: #33384a;
   --color-bg-soft: #f5fdff;
