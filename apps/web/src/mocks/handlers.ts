@@ -31,6 +31,17 @@ export const handlers = [
 
   // Current user
   http.get('*/me', () => {
-    return HttpResponse.json({ user: baseUser })
+    return HttpResponse.json({
+      user: {
+        ...baseUser,
+        email: 'demo@obs.ai',
+        roles: ['owner'],
+      },
+      orgs: [{ id: 'o1', name: 'Demo Organization' }],
+      stores: [
+        { id: 's1', name: 'Coffee Bar', orgId: 'o1' },
+        { id: 's2', name: 'Downtown Kiosk', orgId: 'o1' },
+      ],
+    })
   }),
 ]

@@ -1,0 +1,246 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search...",
+    "filter": "Filter",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "refresh": "Refresh",
+    "logout": "Logout",
+    "login": "Login",
+    "online": "Online",
+    "offline": "Offline",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "total": "Total",
+    "average": "Average",
+    "maximum": "Maximum",
+    "minimum": "Minimum"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "pos": "POS System",
+    "camera": "Camera Analytics",
+    "menu": "Menu Management",
+    "kitchen": "Kitchen",
+    "inventory": "Inventory",
+    "alerts": "Alerts",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Real-time cafe metrics",
+    "metrics": {
+      "revenue": "Daily Revenue",
+      "visitors": "Total Customers",
+      "avgTicket": "Average Basket",
+      "occupancy": "Occupancy Rate"
+    },
+    "charts": {
+      "sales": "Sales Chart",
+      "busyHours": "Busy Hours",
+      "heatmap": "Heat Map"
+    },
+    "tables": {
+      "topProducts": "Top Selling Products",
+      "staffPerformance": "Staff Performance",
+      "alerts": "Recent Alerts"
+    }
+  },
+  "pos": {
+    "title": "POS System",
+    "subtitle": "Fast and easy point of sale",
+    "cart": "Cart",
+    "products": "Products",
+    "categories": {
+      "all": "All",
+      "coffee": "Coffee",
+      "food": "Food",
+      "dessert": "Dessert",
+      "salad": "Salad",
+      "beverage": "Beverage"
+    },
+    "payment": "Payment",
+    "clear": "Clear",
+    "outOfStock": "Out of Stock",
+    "addToCart": "Add to Cart",
+    "removeFromCart": "Remove from Cart",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "discount": "Discount",
+    "coupon": "Coupon",
+    "paymentMethods": {
+      "card": "Card",
+      "cash": "Cash",
+      "digital": "Digital"
+    }
+  },
+  "camera": {
+    "title": "Camera Analytics",
+    "subtitle": "Real-time customer behavior analysis",
+    "live": "Live",
+    "peopleInside": "people inside",
+    "entries": "Entries",
+    "exits": "Exits",
+    "avgDuration": "Average Duration",
+    "minutes": "min",
+    "reconnect": "Reconnect",
+    "connecting": "Connecting...",
+    "connectionLost": "Camera Connection Lost",
+    "connectionError": "Please check camera system connection",
+    "tryAgain": "Try Again",
+    "lastUpdate": "Last Update",
+    "genderDistribution": {
+      "title": "Gender Distribution",
+      "male": "Male",
+      "female": "Female",
+      "unknown": "Unknown"
+    },
+    "ageDistribution": {
+      "title": "Age Distribution",
+      "dominantGroup": "Dominant group"
+    },
+    "trafficTimeline": {
+      "title": "Traffic Timeline",
+      "subtitle": "Last 24 hours",
+      "totalEntries": "Total Entries",
+      "totalExits": "Total Exits",
+      "peakOccupancy": "Peak Occupancy",
+      "avgOccupancy": "Avg. Occupancy",
+      "views": {
+        "traffic": "Entry/Exit",
+        "occupancy": "Occupancy"
+      }
+    },
+    "heatmap": {
+      "title": "Heat Map",
+      "zones": {
+        "entrance": "Entrance",
+        "cashier": "Cashier",
+        "orderCounter": "Order Counter",
+        "seatingArea1": "Seating Area 1",
+        "seatingArea2": "Seating Area 2",
+        "bar": "Bar",
+        "garden": "Garden",
+        "restroom": "Restroom",
+        "exit": "Exit"
+      }
+    }
+  },
+  "menu": {
+    "title": "Menu Management",
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "deleteProduct": "Delete Product",
+    "productName": "Product Name",
+    "productPrice": "Price",
+    "productCategory": "Category",
+    "productDescription": "Description",
+    "productImage": "Product Image",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock"
+  },
+  "kitchen": {
+    "title": "Kitchen",
+    "orders": "Orders",
+    "preparing": "Preparing",
+    "ready": "Ready",
+    "delivered": "Delivered",
+    "orderNumber": "Order Number",
+    "orderTime": "Order Time",
+    "preparationTime": "Preparation Time",
+    "items": "Items"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "stockLevel": "Stock Level",
+    "lowStock": "Low Stock",
+    "outOfStock": "Out of Stock",
+    "supplier": "Supplier",
+    "lastUpdated": "Last Updated",
+    "addStock": "Add Stock",
+    "removeStock": "Remove Stock"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "new": "New",
+    "read": "Read",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "types": {
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error",
+      "success": "Success"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "account": "Account",
+    "security": "Security",
+    "integrations": "Integrations",
+    "backup": "Backup"
+  },
+  "user": {
+    "profile": "Profile",
+    "name": "Full Name",
+    "email": "Email",
+    "role": "Role",
+    "lastLogin": "Last Login",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password"
+  },
+  "errors": {
+    "networkError": "Network connection error",
+    "serverError": "Server error",
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "validationError": "Validation error",
+    "unknownError": "Unknown error"
+  },
+  "success": {
+    "saved": "Successfully saved",
+    "deleted": "Successfully deleted",
+    "updated": "Successfully updated",
+    "created": "Successfully created"
+  },
+  "time": {
+    "now": "Now",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "lastWeek": "Last Week",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "hour": "hour",
+    "hours": "hours",
+    "minute": "minute",
+    "minutes": "minutes",
+    "second": "second",
+    "seconds": "seconds"
+  },
+  "currency": {
+    "symbol": "$",
+    "format": "{symbol}{amount}"
+  }
+}

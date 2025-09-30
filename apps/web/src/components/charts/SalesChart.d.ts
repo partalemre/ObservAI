@@ -5,7 +5,7 @@ interface SalesData {
   orders: number
 }
 interface SalesChartProps {
-  data: SalesData[]
+  data?: SalesData[]
   loading?: boolean
 }
 export declare const SalesChart: React.FC<SalesChartProps>

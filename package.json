@@ -30,5 +30,10 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "apps/web/public"
+    ]
   }
 }

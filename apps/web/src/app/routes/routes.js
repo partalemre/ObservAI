@@ -5,17 +5,9 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { AppShell } from '../AppShell'
-import {
-  Dashboard,
-  POS,
-  Menu,
-  Kitchen,
-  Inventory,
-  Alerts,
-  Settings,
-  Login,
-  Home,
-} from '../pages'
+import { POS, Menu, Kitchen, Inventory, Alerts, Settings, Home } from '../pages'
+import ModernDashboard from '../pages/ModernDashboard'
+import ModernLogin from '../pages/ModernLogin'
 import { useAuthStore } from '../../store/authStore'
 export const ProtectedLayout = () => {
   const { isAuthenticated, isLoading } = useAuthStore()
@@ -73,7 +65,7 @@ const NotFound = () =>
     ],
   })
 export const routesConfig = [
-  { path: '/login', element: _jsx(Login, {}) }, // public
+  { path: '/login', element: _jsx(ModernLogin, {}) }, // public
   { path: '/', element: _jsx(RootRedirect, {}) }, // smart redirect
   // Redirect aliases for incorrect URLs (backward compatibility)
   {
@@ -108,8 +100,12 @@ export const routesConfig = [
   {
     element: _jsx(ProtectedLayout, {}), // guard + AppShell
     children: [
-      { path: '/dashboard', element: _jsx(Dashboard, {}) },
+      { path: '/dashboard', element: _jsx(ModernDashboard, {}) },
       { path: '/pos', element: _jsx(POS, {}) },
+      {
+        path: '/camera',
+        element: _jsx('div', { children: 'Camera Analytics' }),
+      }, // Temporary placeholder
       { path: '/menu', element: _jsx(Menu, {}) },
       { path: '/kitchen', element: _jsx(Kitchen, {}) },
       { path: '/inventory', element: _jsx(Inventory, {}) },

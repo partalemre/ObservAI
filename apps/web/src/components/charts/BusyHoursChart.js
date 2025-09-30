@@ -1,81 +1,294 @@
 import { jsx as _jsx, jsxs as _jsxs } from 'react/jsx-runtime'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
-import { t } from '../../lib/i18n'
+import React from 'react'
+import { motion } from 'framer-motion'
+import ReactECharts from 'echarts-for-react'
+import { Clock, Users, Loader2, TrendingUp } from 'lucide-react'
 export const BusyHoursChart = ({ data, loading }) => {
-  if (!data || data.length === 0) {
-    return null
+  // Transform data for ECharts
+  const chartData = React.useMemo(() => {
+    if (!data || data.length === 0) {
+      // Sample data for demonstration
+      return Array.from({ length: 24 }, (_, i) => ({
+        hour: i,
+        visitors:
+          Math.floor(Math.random() * 50) +
+          10 +
+          (i >= 11 && i <= 14 ? 20 : 0) +
+          (i >= 18 && i <= 21 ? 15 : 0),
+      }))
+    }
+    return data
+  }, [data])
+  const labels = chartData.map(
+    (item) => `${item.hour.toString().padStart(2, '0')}:00`
+  )
+  const values = chartData.map((item) => item.visitors)
+  const totalVisitors = values.reduce((sum, value) => sum + value, 0)
+  const avgVisitors = totalVisitors / values.length
+  const peakHour = chartData.reduce((max, current) =>
+    current.visitors > max.visitors ? current : max
+  )
+  const option = {
+    backgroundColor: 'transparent',
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '8%',
+      top: '10%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: labels,
+      axisLine: {
+        lineStyle: { color: '#33304a' },
+      },
+      axisLabel: {
+        color: '#9ca3af',
+        fontSize: 10,
+        rotate: 45,
+        interval: 1,
+      },
+      splitLine: {
+        show: false,
+      },
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { show: false },
+      splitLine: {
+        lineStyle: {
+          color: '#252336',
+          type: 'dashed',
+        },
+      },
+      axisLabel: {
+        color: '#9ca3af',
+        fontSize: 11,
+        formatter: (value) => `${value}`,
+      },
+    },
+    series: [
+      {
+        name: 'Ziyaretçi',
+        type: 'bar',
+        data: values.map((value, index) => ({
+          value,
+          itemStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0,
+                  color: value === peakHour.visitors ? '#f59e0b' : '#10b981',
+                },
+                {
+                  offset: 1,
+                  color: value === peakHour.visitors ? '#d97706' : '#059669',
+                },
+              ],
+            },
+            borderRadius: [4, 4, 0, 0],
+          },
+        })),
+        barWidth: '60%',
+        emphasis: {
+          focus: 'series',
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(16, 185, 129, 0.5)',
+          },
+        },
+      },
+    ],
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(15, 14, 23, 0.95)',
+      borderColor: '#33304a',
+      borderWidth: 1,
+      textStyle: {
+        color: '#ffffff',
+        fontSize: 12,
+      },
+      extraCssText:
+        'backdrop-filter: blur(8px); border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);',
+      formatter: (params) => {
+        const param = params[0]
+        const isPeak = param.value === peakHour.visitors
+        return `
+          <div style="padding: 4px 0;">
+            <div style="color: #9ca3af; font-size: 11px; margin-bottom: 4px;">${param.name}</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 8px; height: 8px; border-radius: 50%; background: ${param.color};"></div>
+              <span style="color: #ffffff; font-weight: 600;">${param.value} ziyaretçi</span>
+              ${isPeak ? '<span style="color: #f59e0b; font-size: 10px; margin-left: 4px;">🔥 Pik</span>' : ''}
+            </div>
+          </div>
+        `
+      },
+    },
+    animation: true,
+    animationDuration: 1200,
+    animationEasing: 'elasticOut',
   }
   if (loading) {
-    return _jsxs('div', {
-      className: 'rounded-lg border border-gray-200 bg-white p-6 shadow-sm',
+    return _jsxs(motion.div, {
+      className: 'glass-card rounded-xl p-6 h-[400px]',
+      initial: { opacity: 0, scale: 0.95 },
+      animate: { opacity: 1, scale: 1 },
       children: [
-        _jsx('h3', {
-          className: 'mb-4 text-lg font-semibold text-gray-900',
-          children: t('dashboard.busyHours'),
+        _jsxs('div', {
+          className: 'flex items-center gap-3 mb-4',
+          children: [
+            _jsx('div', {
+              className: 'p-2 bg-green-500/20 rounded-lg',
+              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+            }),
+            _jsx('h3', {
+              className: 'text-lg font-semibold text-white',
+              children: 'Yo\u011Fun Saatler',
+            }),
+          ],
         }),
         _jsx('div', {
-          className: 'flex h-64 items-center justify-center',
-          children: _jsx('div', {
-            className: 'animate-pulse text-gray-400',
-            children: t('common.loading'),
+          className: 'flex items-center justify-center h-[300px]',
+          children: _jsxs('div', {
+            className: 'flex items-center gap-2 text-gray-400',
+            children: [
+              _jsx(Loader2, { className: 'w-5 h-5 animate-spin' }),
+              _jsx('span', { children: 'Y\u00FCkleniyor...' }),
+            ],
           }),
         }),
       ],
     })
   }
-  const formatXAxisTick = (tickItem) => {
-    return `${tickItem}:00`
-  }
-  return _jsxs('div', {
-    className: 'rounded-lg border border-gray-200 bg-white p-6 shadow-sm',
-    children: [
-      _jsx('h3', {
-        className: 'mb-4 text-lg font-semibold text-gray-900',
-        children: t('dashboard.busyHours'),
-      }),
-      _jsx('div', {
-        className: 'h-64',
-        children: _jsx(ResponsiveContainer, {
-          width: '100%',
-          height: '100%',
-          children: _jsxs(BarChart, {
-            data: data,
+  if (!chartData || chartData.length === 0) {
+    return _jsxs(motion.div, {
+      className: 'glass-card rounded-xl p-6 h-[400px]',
+      initial: { opacity: 0, scale: 0.95 },
+      animate: { opacity: 1, scale: 1 },
+      children: [
+        _jsxs('div', {
+          className: 'flex items-center gap-3 mb-4',
+          children: [
+            _jsx('div', {
+              className: 'p-2 bg-green-500/20 rounded-lg',
+              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+            }),
+            _jsx('h3', {
+              className: 'text-lg font-semibold text-white',
+              children: 'Yo\u011Fun Saatler',
+            }),
+          ],
+        }),
+        _jsx('div', {
+          className: 'flex items-center justify-center h-[300px]',
+          children: _jsxs('div', {
+            className: 'text-center text-gray-400',
             children: [
-              _jsx(CartesianGrid, {
-                strokeDasharray: '3 3',
-                className: 'opacity-30',
+              _jsx(Users, { className: 'w-12 h-12 mx-auto mb-3 opacity-50' }),
+              _jsx('p', { children: 'Veri bulunamad\u0131' }),
+            ],
+          }),
+        }),
+      ],
+    })
+  }
+  return _jsxs(motion.div, {
+    className: 'glass-card rounded-xl p-6',
+    initial: { opacity: 0, scale: 0.95 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { duration: 0.5, delay: 0.2 },
+    children: [
+      _jsx('div', {
+        className: 'flex items-center justify-between mb-6',
+        children: _jsxs('div', {
+          className: 'flex items-center gap-3',
+          children: [
+            _jsx('div', {
+              className: 'p-2 bg-green-500/20 rounded-lg',
+              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+            }),
+            _jsxs('div', {
+              children: [
+                _jsx('h3', {
+                  className: 'text-lg font-semibold text-white',
+                  children: 'Yo\u011Fun Saatler',
+                }),
+                _jsx('p', {
+                  className: 'text-sm text-gray-400',
+                  children:
+                    'Saatlik ziyaret\u00E7i da\u011F\u0131l\u0131m\u0131',
+                }),
+              ],
+            }),
+          ],
+        }),
+      }),
+      _jsxs('div', {
+        className: 'grid grid-cols-3 gap-4 mb-6',
+        children: [
+          _jsxs('div', {
+            className:
+              'bg-gradient-to-r from-green-500/10 to-green-600/10 rounded-lg p-3 border border-green-500/20',
+            children: [
+              _jsx('div', {
+                className: 'text-xs text-green-300 mb-1',
+                children: 'Toplam Ziyaret\u00E7i',
               }),
-              _jsx(XAxis, {
-                dataKey: 'hour',
-                tickFormatter: formatXAxisTick,
-                className: 'text-xs',
-              }),
-              _jsx(YAxis, { className: 'text-xs' }),
-              _jsx(Tooltip, {
-                formatter: (value) => [value, 'Visitors'],
-                labelFormatter: (value) => `${value}:00`,
-                contentStyle: {
-                  backgroundColor: 'white',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                },
-              }),
-              _jsx(Bar, {
-                dataKey: 'visitors',
-                fill: '#10b981',
-                radius: [2, 2, 0, 0],
+              _jsx('div', {
+                className: 'text-lg font-bold text-white',
+                children: totalVisitors.toLocaleString('tr-TR'),
               }),
             ],
           }),
+          _jsxs('div', {
+            className:
+              'bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-lg p-3 border border-blue-500/20',
+            children: [
+              _jsx('div', {
+                className: 'text-xs text-blue-300 mb-1',
+                children: 'Saatlik Ortalama',
+              }),
+              _jsx('div', {
+                className: 'text-lg font-bold text-white',
+                children: Math.round(avgVisitors),
+              }),
+            ],
+          }),
+          _jsxs('div', {
+            className:
+              'bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-lg p-3 border border-amber-500/20',
+            children: [
+              _jsxs('div', {
+                className: 'flex items-center gap-1 mb-1',
+                children: [
+                  _jsx(TrendingUp, { className: 'w-3 h-3 text-amber-400' }),
+                  _jsx('div', {
+                    className: 'text-xs text-amber-300',
+                    children: 'En Yo\u011Fun',
+                  }),
+                ],
+              }),
+              _jsxs('div', {
+                className: 'text-lg font-bold text-white',
+                children: [peakHour.hour.toString().padStart(2, '0'), ':00'],
+              }),
+            ],
+          }),
+        ],
+      }),
+      _jsx('div', {
+        className: 'h-[280px]',
+        children: _jsx(ReactECharts, {
+          option: option,
+          style: { height: '100%', width: '100%' },
+          opts: { renderer: 'canvas' },
         }),
       }),
     ],

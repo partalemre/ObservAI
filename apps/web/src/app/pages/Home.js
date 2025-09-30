@@ -1,471 +1,211 @@
 import { jsx as _jsx, jsxs as _jsxs } from 'react/jsx-runtime'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import {
-  BarChart3,
-  UtensilsCrossed,
-  ChefHat,
-  Package,
-  Users,
-  Brain,
-  ArrowRight,
-  Clock,
-  TrendingUp,
-  DollarSign,
-} from 'lucide-react'
-import { Button, Badge, Card } from '../../components/ui'
-import { BrandLogo } from '../../components/brand/BrandLogo'
-import { GradientBG } from '../../components/primitives/GradientBG'
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
+// Simple brand token
+const brand = {
+  from: '#0ea5e9', // sky-500
+  to: '#22d3ee', // cyan-400
 }
-const staggerChildren = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-}
-export const Home = () => {
+const FadeUp = ({ delay = 0, children }) =>
+  _jsx(motion.div, {
+    initial: { opacity: 0, y: 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.4 },
+    transition: { duration: 0.6, ease: 'easeOut', delay },
+    children: children,
+  })
+export default function Home() {
+  const { scrollYProgress } = useScroll()
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [0.8, 0.3])
   return _jsxs('div', {
-    className: 'bg-bg-soft min-h-screen',
+    className:
+      'relative min-h-screen overflow-hidden bg-slate-950 text-slate-100',
     children: [
-      _jsx(GradientBG, {
-        className: 'relative overflow-hidden',
+      _jsx(motion.div, {
+        'aria-hidden': true,
+        style: { opacity: bgOpacity },
+        className: 'pointer-events-none absolute inset-0 -z-10',
         children: _jsx('div', {
-          className: 'container mx-auto px-4 py-20 lg:py-32',
-          children: _jsxs(motion.div, {
-            className: 'mx-auto max-w-4xl text-center',
-            variants: staggerChildren,
-            initial: 'initial',
-            animate: 'animate',
-            children: [
-              _jsx(motion.div, {
-                className: 'mb-6',
-                variants: fadeInUp,
-                children: _jsx(Badge, {
-                  variant: 'outline',
-                  className: 'mb-8',
+          className:
+            'absolute -inset-[20%] bg-[radial-gradient(ellipse_at_top_left,rgba(14,165,233,0.35),transparent_60%),radial-gradient(ellipse_at_bottom_right,rgba(34,211,238,0.35),transparent_55%)] blur-2xl',
+        }),
+      }),
+      _jsxs('section', {
+        className:
+          'mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 pt-28 pb-24 md:grid-cols-2',
+        children: [
+          _jsx(FadeUp, {
+            children: _jsxs('div', {
+              children: [
+                _jsx('div', {
+                  className:
+                    'mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80 backdrop-blur',
                   children: 'Built for modern hospitality',
                 }),
-              }),
-              _jsxs(motion.h1, {
-                className:
-                  'font-display text-ink mb-6 text-5xl font-bold tracking-tight lg:text-7xl',
-                variants: fadeInUp,
-                children: [
-                  'Operate smarter with ',
-                  _jsx('span', {
-                    className: 'text-brand',
-                    children: 'ObservAI',
-                  }),
-                ],
-              }),
-              _jsx(motion.p, {
-                className:
-                  'text-ink/70 mx-auto mb-8 max-w-2xl text-xl leading-relaxed',
-                variants: fadeInUp,
-                children:
-                  'Unify POS, menu, kitchen, inventory and AI insights in one place.',
-              }),
-              _jsxs(motion.div, {
-                className:
-                  'mb-16 flex flex-col justify-center gap-4 sm:flex-row',
-                variants: fadeInUp,
-                children: [
-                  _jsxs(Button, {
-                    size: 'lg',
-                    variant: 'accent',
-                    className: 'px-8 py-4 text-lg',
-                    children: [
-                      'Request a demo',
-                      _jsx(ArrowRight, { className: 'ml-2 h-5 w-5' }),
-                    ],
-                  }),
-                  _jsx(Button, {
-                    size: 'lg',
-                    variant: 'secondary',
-                    className: 'px-8 py-4 text-lg',
-                    asChild: true,
-                    children: _jsx(Link, { to: '/login', children: 'Sign in' }),
-                  }),
-                ],
-              }),
-              _jsx(motion.div, {
-                className: 'relative mx-auto max-w-5xl',
-                variants: fadeInUp,
-                children: _jsx('div', {
+                _jsxs('h1', {
                   className:
-                    'border-border rounded-3xl border bg-white p-8 shadow-2xl',
-                  children: _jsxs('div', {
-                    className: 'grid grid-cols-1 gap-6 md:grid-cols-3',
-                    children: [
-                      _jsxs(Card, {
-                        className: 'p-4',
-                        children: [
-                          _jsxs('div', {
-                            className: 'mb-4 flex items-center gap-3',
-                            children: [
-                              _jsx(BarChart3, {
-                                className: 'text-brand h-5 w-5',
-                              }),
-                              _jsx('span', {
-                                className: 'text-ink font-semibold',
-                                children: 'Analytics',
-                              }),
-                            ],
-                          }),
-                          _jsx('div', {
-                            className:
-                              'from-brand/20 to-accent/20 h-20 rounded-xl bg-gradient-to-br',
-                          }),
-                        ],
-                      }),
-                      _jsxs(Card, {
-                        className: 'p-4',
-                        children: [
-                          _jsxs('div', {
-                            className: 'mb-4 flex items-center gap-3',
-                            children: [
-                              _jsx(UtensilsCrossed, {
-                                className: 'text-brand h-5 w-5',
-                              }),
-                              _jsx('span', {
-                                className: 'text-ink font-semibold',
-                                children: 'Orders',
-                              }),
-                            ],
-                          }),
-                          _jsx('div', {
-                            className:
-                              'from-accent/20 to-brand/20 h-20 rounded-xl bg-gradient-to-br',
-                          }),
-                        ],
-                      }),
-                      _jsxs(Card, {
-                        className: 'p-4',
-                        children: [
-                          _jsxs('div', {
-                            className: 'mb-4 flex items-center gap-3',
-                            children: [
-                              _jsx(Brain, { className: 'text-brand h-5 w-5' }),
-                              _jsx('span', {
-                                className: 'text-ink font-semibold',
-                                children: 'AI Insights',
-                              }),
-                            ],
-                          }),
-                          _jsx('div', {
-                            className:
-                              'from-brand/20 to-accent/20 h-20 rounded-xl bg-gradient-to-br',
-                          }),
-                        ],
-                      }),
-                    ],
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-      }),
-      _jsx('section', {
-        className: 'border-border border-y bg-white py-16',
-        children: _jsxs('div', {
-          className: 'container mx-auto px-4',
-          children: [
-            _jsx('p', {
-              className: 'text-ink/60 mb-8 text-center font-medium',
-              children: 'Trusted by restaurants worldwide',
-            }),
-            _jsx('div', {
-              className: 'flex items-center justify-center gap-12 opacity-40',
-              children: [1, 2, 3, 4, 5, 6].map((i) =>
-                _jsx(
-                  'div',
-                  {
-                    className:
-                      'bg-ink/10 flex h-12 w-24 items-center justify-center rounded-lg',
-                    children: _jsxs('span', {
-                      className: 'text-ink/40 font-semibold',
-                      children: ['Logo ', i],
-                    }),
-                  },
-                  i
-                )
-              ),
-            }),
-          ],
-        }),
-      }),
-      _jsx('section', {
-        className: 'bg-bg-soft py-20',
-        children: _jsx('div', {
-          className: 'container mx-auto px-4',
-          children: _jsxs(motion.div, {
-            className:
-              'mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3',
-            variants: staggerChildren,
-            initial: 'initial',
-            whileInView: 'animate',
-            viewport: { once: true },
-            children: [
-              _jsx(motion.div, {
-                variants: fadeInUp,
-                children: _jsxs(Card, {
-                  className: 'p-8 text-center',
+                    'text-4xl leading-tight font-extrabold md:text-6xl',
                   children: [
-                    _jsx('div', {
+                    'Operate smarter with',
+                    _jsx('br', {}),
+                    _jsx('span', {
                       className:
-                        'mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100',
-                      children: _jsx(DollarSign, {
-                        className: 'h-8 w-8 text-green-600',
-                      }),
-                    }),
-                    _jsx('h3', {
-                      className:
-                        'font-display text-ink mb-2 text-2xl font-bold',
-                      children: '30%',
-                    }),
-                    _jsx('p', {
-                      className: 'text-ink/70',
-                      children: 'Reduce ops cost',
+                        'bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent',
+                      children: 'ObservAI',
                     }),
                   ],
-                }),
-              }),
-              _jsx(motion.div, {
-                variants: fadeInUp,
-                children: _jsxs(Card, {
-                  className: 'p-8 text-center',
-                  children: [
-                    _jsx('div', {
-                      className:
-                        'mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100',
-                      children: _jsx(TrendingUp, {
-                        className: 'h-8 w-8 text-blue-600',
-                      }),
-                    }),
-                    _jsx('h3', {
-                      className:
-                        'font-display text-ink mb-2 text-2xl font-bold',
-                      children: '25%',
-                    }),
-                    _jsx('p', {
-                      className: 'text-ink/70',
-                      children: 'Increase AOV',
-                    }),
-                  ],
-                }),
-              }),
-              _jsx(motion.div, {
-                variants: fadeInUp,
-                children: _jsxs(Card, {
-                  className: 'p-8 text-center',
-                  children: [
-                    _jsx('div', {
-                      className:
-                        'mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-100',
-                      children: _jsx(Clock, {
-                        className: 'h-8 w-8 text-purple-600',
-                      }),
-                    }),
-                    _jsx('h3', {
-                      className:
-                        'font-display text-ink mb-2 text-2xl font-bold',
-                      children: 'Real-time',
-                    }),
-                    _jsx('p', {
-                      className: 'text-ink/70',
-                      children: 'See peak hours',
-                    }),
-                  ],
-                }),
-              }),
-            ],
-          }),
-        }),
-      }),
-      _jsx('section', {
-        className: 'bg-white py-20',
-        children: _jsxs('div', {
-          className: 'container mx-auto px-4',
-          children: [
-            _jsxs('div', {
-              className: 'mb-16 text-center',
-              children: [
-                _jsx('h2', {
-                  className: 'font-display text-ink mb-4 text-4xl font-bold',
-                  children: 'Everything you need to run your restaurant',
                 }),
                 _jsx('p', {
-                  className: 'text-ink/70 mx-auto max-w-2xl text-xl',
+                  className: 'mt-5 max-w-xl text-white/70',
                   children:
-                    'From orders to insights, manage every aspect of your business with one platform',
+                    'Unify POS, menu, kitchen, inventory and AI insights in one place. Clarity, control and margin\u2014on every shift.',
                 }),
-              ],
-            }),
-            _jsx(motion.div, {
-              className:
-                'mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3',
-              variants: staggerChildren,
-              initial: 'initial',
-              whileInView: 'animate',
-              viewport: { once: true },
-              children: [
-                {
-                  icon: BarChart3,
-                  title: 'Smart POS',
-                  description:
-                    'Lightning-fast checkout with built-in analytics',
-                },
-                {
-                  icon: UtensilsCrossed,
-                  title: 'Dynamic Menu',
-                  description:
-                    'Real-time menu updates and pricing optimization',
-                },
-                {
-                  icon: ChefHat,
-                  title: 'Kitchen Display',
-                  description: 'Streamlined order management for your kitchen',
-                },
-                {
-                  icon: Package,
-                  title: 'Inventory Alerts',
-                  description: 'Never run out with smart inventory tracking',
-                },
-                {
-                  icon: Users,
-                  title: 'Staff & Tips',
-                  description:
-                    'Team management and tip distribution (coming soon)',
-                  badge: 'Soon',
-                },
-                {
-                  icon: Brain,
-                  title: 'AI Insights',
-                  description: 'Predictive analytics and business intelligence',
-                },
-              ].map((feature, index) =>
-                _jsx(
-                  motion.div,
-                  {
-                    variants: fadeInUp,
-                    children: _jsxs(Card, {
-                      className: 'h-full p-6 transition-shadow hover:shadow-lg',
-                      children: [
-                        _jsx('div', {
-                          className:
-                            'bg-brand/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl',
-                          children: _jsx(feature.icon, {
-                            className: 'text-brand h-6 w-6',
-                          }),
-                        }),
-                        _jsxs('div', {
-                          className: 'mb-2 flex items-center gap-2',
-                          children: [
-                            _jsx('h3', {
-                              className:
-                                'font-display text-ink text-lg font-semibold',
-                              children: feature.title,
-                            }),
-                            feature.badge &&
-                              _jsx(Badge, {
-                                variant: 'outline',
-                                size: 'sm',
-                                children: feature.badge,
-                              }),
-                          ],
-                        }),
-                        _jsx('p', {
-                          className: 'text-ink/70',
-                          children: feature.description,
-                        }),
-                      ],
-                    }),
-                  },
-                  index
-                )
-              ),
-            }),
-          ],
-        }),
-      }),
-      _jsx('section', {
-        className: 'bg-bg-soft py-16',
-        children: _jsxs('div', {
-          className: 'container mx-auto px-4',
-          children: [
-            _jsx('div', {
-              className: 'mb-12 text-center',
-              children: _jsx('h2', {
-                className: 'font-display text-ink mb-4 text-3xl font-bold',
-                children: 'Connects with your favorite tools',
-              }),
-            }),
-            _jsx('div', {
-              className:
-                'mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-4',
-              children: ['Yemeksepeti', 'Getir', 'Trendyol', 'Open API'].map(
-                (integration, index) =>
-                  _jsx(
-                    Badge,
-                    {
-                      variant: 'outline',
-                      className: 'px-4 py-2 text-sm',
-                      children: integration,
-                    },
-                    index
-                  )
-              ),
-            }),
-          ],
-        }),
-      }),
-      _jsx('footer', {
-        className: 'border-border border-t bg-white py-16',
-        children: _jsxs('div', {
-          className: 'container mx-auto px-4',
-          children: [
-            _jsxs('div', {
-              className:
-                'flex flex-col items-center justify-between md:flex-row',
-              children: [
-                _jsx(BrandLogo, { size: 'md' }),
                 _jsxs('div', {
-                  className: 'mt-8 flex items-center gap-8 md:mt-0',
+                  className: 'mt-8 flex flex-wrap gap-3',
                   children: [
                     _jsx(Link, {
-                      to: '/docs',
-                      className: 'text-ink/70 hover:text-ink transition-colors',
-                      children: 'Docs',
-                    }),
-                    _jsx(Link, {
-                      to: '/changelog',
-                      className: 'text-ink/70 hover:text-ink transition-colors',
-                      children: 'Changelog',
-                    }),
-                    _jsx(Link, {
                       to: '/contact',
-                      className: 'text-ink/70 hover:text-ink transition-colors',
-                      children: 'Contact',
+                      className:
+                        'inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-3 font-semibold text-slate-900 shadow-lg shadow-cyan-500/20 hover:opacity-95',
+                      children: 'Request a demo \u2192',
+                    }),
+                    _jsx(Link, {
+                      to: '/login',
+                      className:
+                        'inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white/90 hover:bg-white/10',
+                      children: 'Sign in',
                     }),
                   ],
                 }),
               ],
             }),
-            _jsx('div', {
-              className:
-                'border-border text-ink/60 mt-8 border-t pt-8 text-center',
-              children: _jsx('p', {
-                children: '\u00A9 2024 ObservAI. All rights reserved.',
-              }),
+          }),
+          _jsx(FadeUp, {
+            delay: 0.1,
+            children: _jsx('div', {
+              className: 'grid gap-4 sm:grid-cols-2',
+              children: [
+                { k: 'Average Daily Sales', v: '$3,495', s: '+3.7%' },
+                { k: 'CoGS', v: '31.4%', s: '-4.5%' },
+                { k: 'Labor Ratio', v: '25.2%', s: '+1.0%' },
+                { k: 'Occupancy', v: '8.2%', s: '+0.3%' },
+              ].map((x, i) =>
+                _jsxs(
+                  motion.div,
+                  {
+                    whileHover: { scale: 1.02 },
+                    transition: { type: 'spring', stiffness: 200, damping: 18 },
+                    className:
+                      'rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-md',
+                    children: [
+                      _jsx('div', {
+                        className: 'text-xs text-white/60',
+                        children: x.k,
+                      }),
+                      _jsx('div', {
+                        className: 'mt-2 text-2xl font-bold',
+                        children: x.v,
+                      }),
+                      _jsx('div', {
+                        className: 'mt-1 text-xs text-emerald-300',
+                        children: x.s,
+                      }),
+                    ],
+                  },
+                  x.k
+                )
+              ),
             }),
-          ],
-        }),
+          }),
+        ],
+      }),
+      _jsxs('section', {
+        className: 'mx-auto max-w-7xl px-6 pb-28',
+        children: [
+          _jsx(FadeUp, {
+            children: _jsx('h2', {
+              className:
+                'mb-6 text-2xl font-bold tracking-tight text-white/90 md:text-3xl',
+              children: 'Everything connected',
+            }),
+          }),
+          _jsx('div', {
+            className: 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3',
+            children: [
+              {
+                t: 'POS',
+                d: 'Fast, keyboard-friendly checkout with cash drawer control',
+                to: '/pos',
+              },
+              {
+                t: 'Kitchen',
+                d: 'Prioritized tickets, expo view and bump bar',
+                to: '/kitchen',
+              },
+              {
+                t: 'Menu',
+                d: 'Smart modifiers and pricing; bulk updates in seconds',
+                to: '/menu',
+              },
+              {
+                t: 'Inventory',
+                d: 'Par levels, variance and vendor price watch',
+                to: '/inventory',
+              },
+              {
+                t: 'Alerts',
+                d: 'Thresholds & escalations to keep shifts on track',
+                to: '/alerts',
+              },
+              {
+                t: 'Settings',
+                d: 'Org, stores, taxes and roles',
+                to: '/settings',
+              },
+            ].map((m, i) =>
+              _jsx(
+                FadeUp,
+                {
+                  delay: 0.05 * i,
+                  children: _jsxs(Link, {
+                    to: m.to,
+                    className:
+                      'group block rounded-2xl border border-white/10 bg-white/[0.04] p-5 ring-0 transition hover:bg-white/[0.07]',
+                    children: [
+                      _jsx('div', {
+                        className: 'mb-1 text-sm text-white/60',
+                        children: 'Module',
+                      }),
+                      _jsx('div', {
+                        className: 'text-lg font-semibold',
+                        children: m.t,
+                      }),
+                      _jsx('p', {
+                        className: 'mt-2 text-sm text-white/65',
+                        children: m.d,
+                      }),
+                      _jsxs('div', {
+                        className:
+                          'mt-4 inline-flex items-center gap-2 text-cyan-300 opacity-0 transition group-hover:opacity-100',
+                        children: [
+                          'Open ',
+                          m.t,
+                          ' ',
+                          _jsx('span', { children: '\u2192' }),
+                        ],
+                      }),
+                    ],
+                  }),
+                },
+                m.t
+              )
+            ),
+          }),
+        ],
+      }),
+      _jsxs('footer', {
+        className: 'mx-auto max-w-7xl px-6 pb-10 text-sm text-white/50',
+        children: ['\u00A9 ', new Date().getFullYear(), ' ObservAI'],
       }),
     ],
   })

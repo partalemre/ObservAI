@@ -16,6 +16,8 @@ import {
   Login,
   Home,
 } from '../pages'
+import ModernDashboard from '../pages/ModernDashboard'
+import ModernLogin from '../pages/ModernLogin'
 import { useAuthStore } from '../../store/authStore'
 
 export const ProtectedLayout: React.FC = () => {
@@ -75,7 +77,7 @@ const NotFound: React.FC = () => (
 )
 
 export const routesConfig = [
-  { path: '/login', element: <Login /> }, // public
+  { path: '/login', element: <ModernLogin /> }, // public
   { path: '/', element: <RootRedirect /> }, // smart redirect
 
   // Redirect aliases for incorrect URLs (backward compatibility)
@@ -95,8 +97,9 @@ export const routesConfig = [
   {
     element: <ProtectedLayout />, // guard + AppShell
     children: [
-      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/dashboard', element: <ModernDashboard /> },
       { path: '/pos', element: <POS /> },
+      { path: '/camera', element: <div>Camera Analytics</div> }, // Temporary placeholder
       { path: '/menu', element: <Menu /> },
       { path: '/kitchen', element: <Kitchen /> },
       { path: '/inventory', element: <Inventory /> },
