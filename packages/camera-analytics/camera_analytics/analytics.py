@@ -283,7 +283,13 @@ class CameraAnalyticsEngine:
       if best_track:
         best_track.age = float(face.age) if face.age is not None else None
         if hasattr(face, "sex") and face.sex is not None:
-          best_track.gender = "male" if float(face.sex) > 0.5 else "female"
+          # InsightFace may return sex as string ('M'/'F') or float (0.0-1.0)
+          sex_value = face.sex
+          if isinstance(sex_value, str):
+            best_track.gender = "male" if sex_value.upper() in ('M', 'MALE') else "female"
+          else:
+            # Float value: > 0.5 typically means male
+            best_track.gender = "male" if float(sex_value) > 0.5 else "female"
         else:
           best_track.gender = "unknown"
 

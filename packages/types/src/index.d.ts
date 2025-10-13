@@ -28,6 +28,19 @@ export interface MenuItemDTO {
   tags?: string[]
   imageUrl?: string
 }
+export type AlertType =
+  | 'long_queue'
+  | 'crowd_surge'
+  | 'low_inventory'
+  | 'long_table_occupancy'
+export type AlertSeverity = 'low' | 'medium' | 'high'
+export interface Alert {
+  type: AlertType
+  severity: AlertSeverity
+  message: string
+  timestamp: string
+  metadata: Record<string, unknown>
+}
 export interface CameraMetricsDTO {
   ts: string
   peopleIn: number
@@ -52,6 +65,7 @@ export interface CameraMetricsDTO {
     longestStaySeconds: number
   }>
   heatmap?: number[][]
+  alerts?: Alert[]
   deviceId?: string
   location?: string
 }
