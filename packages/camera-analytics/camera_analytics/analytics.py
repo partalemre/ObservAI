@@ -20,6 +20,7 @@ from ultralytics import YOLO
 from .config import AnalyticsConfig, EntranceLine, Zone
 from .geometry import heatmap_bin, line_side, point_in_polygon
 from .metrics import (
+  Alert,
   CameraMetrics,
   QueueSnapshot,
   TableSnapshot,
@@ -96,6 +97,10 @@ class CameraAnalyticsEngine:
 
     self.zone_active_members: Dict[str, Dict[int, float]] = defaultdict(dict)
     self.zone_completed_durations: Dict[str, list[float]] = defaultdict(list)
+
+    # Tracking for alerts
+    self.previous_people_count = 0
+    self.last_crowd_check = time.time()
 
   def run(self) -> None:
     last_write = 0.0
@@ -328,7 +333,79 @@ class CameraAnalyticsEngine:
       )
     metrics.tables = table_snapshots
     metrics.heatmap = self.heatmap.astype(int).tolist()
+
+    # Generate alerts
+    metrics.alerts = self._generate_alerts(metrics)
+
     return metrics
+
+  def _generate_alerts(self, metrics: CameraMetrics) -> list[Alert]:
+    """Generate alerts based on current metrics and thresholds"""
+    alerts: list[Alert] = []
+    now = time.time()
+    thresholds = self.config.alert_thresholds
+
+    # Check for long queue wait times
+    if metrics.queue.average_wait_seconds > thresholds.queue_long_wait:
+      alerts.append(
+        Alert(
+          type="long_queue",
+          severity="high" if metrics.queue.average_wait_seconds > 300 else "medium",
+          message=f"Queue wait time is {int(metrics.queue.average_wait_seconds)}s (avg). Consider adding staff.",
+          metadata={
+            "averageWaitSeconds": round(metrics.queue.average_wait_seconds, 1),
+            "queueCount": metrics.queue.current,
+          },
+        )
+      )
+
+    # Check for high queue count
+    if metrics.queue.current >= thresholds.queue_high_count:
+      alerts.append(
+        Alert(
+          type="long_queue",
+          severity="high" if metrics.queue.current >= 12 else "medium",
+          message=f"Queue has {metrics.queue.current} people waiting. Immediate attention needed.",
+          metadata={"queueCount": metrics.queue.current},
+        )
+      )
+
+    # Check for crowd surge (sudden increase in people count)
+    if now - self.last_crowd_check >= thresholds.crowd_surge_window:
+      people_increase = metrics.current - self.previous_people_count
+      if people_increase >= thresholds.crowd_surge_threshold:
+        alerts.append(
+          Alert(
+            type="crowd_surge",
+            severity="medium",
+            message=f"Sudden crowd increase detected: {people_increase} new customers in {int(thresholds.crowd_surge_window)}s.",
+            metadata={
+              "increase": people_increase,
+              "currentCount": metrics.current,
+              "previousCount": self.previous_people_count,
+            },
+          )
+        )
+      self.previous_people_count = metrics.current
+      self.last_crowd_check = now
+
+    # Check for tables with long occupancy times
+    for table in metrics.tables:
+      if table.longest_stay_seconds > thresholds.table_long_stay:
+        alerts.append(
+          Alert(
+            type="long_table_occupancy",
+            severity="low",
+            message=f"Table '{table.name or table.id}' has been occupied for {int(table.longest_stay_seconds / 60)}+ minutes.",
+            metadata={
+              "tableId": table.id,
+              "tableName": table.name,
+              "longestStaySeconds": round(table.longest_stay_seconds, 1),
+            },
+          )
+        )
+
+    return alerts
 
   def _write_metrics(self, metrics: CameraMetrics) -> None:
     self.output_path.parent.mkdir(parents=True, exist_ok=True)

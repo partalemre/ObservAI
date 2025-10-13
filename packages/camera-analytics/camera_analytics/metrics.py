@@ -9,6 +9,16 @@ def default_age_buckets() -> Dict[str, int]:
   return {"0-17": 0, "18-25": 0, "26-35": 0, "36-50": 0, "50+": 0}
 
 
+@dataclass
+class Alert:
+  """Represents an alert for abnormal conditions"""
+  type: str  # "long_queue", "crowd_surge", "low_inventory", "long_table_occupancy"
+  severity: str  # "low", "medium", "high"
+  message: str
+  timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+  metadata: Dict[str, object] = field(default_factory=dict)
+
+
 def bucket_for_age(age: Optional[float]) -> str:
   if age is None:
     return "unknown"
@@ -50,6 +60,7 @@ class CameraMetrics:
   queue: QueueSnapshot = field(default_factory=lambda: QueueSnapshot(0, 0.0, 0.0))
   tables: List[TableSnapshot] = field(default_factory=list)
   heatmap: List[List[int]] = field(default_factory=list)
+  alerts: List[Alert] = field(default_factory=list)
   ts: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
   def to_dict(self) -> Dict[str, object]:
@@ -76,4 +87,14 @@ class CameraMetrics:
         for table in self.tables
       ],
       "heatmap": self.heatmap,
+      "alerts": [
+        {
+          "type": alert.type,
+          "severity": alert.severity,
+          "message": alert.message,
+          "timestamp": alert.timestamp,
+          "metadata": alert.metadata,
+        }
+        for alert in self.alerts
+      ],
     }

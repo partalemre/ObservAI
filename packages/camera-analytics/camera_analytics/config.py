@@ -30,11 +30,22 @@ class HeatmapConfig:
 
 
 @dataclass
+class AlertThresholds:
+  """Thresholds for generating alerts"""
+  queue_long_wait: float = 180.0  # seconds
+  queue_high_count: int = 8  # number of people
+  crowd_surge_threshold: int = 5  # sudden increase in people
+  crowd_surge_window: float = 30.0  # seconds
+  table_long_stay: float = 7200.0  # seconds (2 hours)
+
+
+@dataclass
 class AnalyticsConfig:
   entrance_line: Optional[EntranceLine] = None
   queue_zone: Optional[Zone] = None
   tables: List[Zone] = field(default_factory=list)
   heatmap: HeatmapConfig = field(default_factory=HeatmapConfig)
+  alert_thresholds: AlertThresholds = field(default_factory=AlertThresholds)
 
 
 def _load_normalized_point(raw: Sequence[float]) -> NormalizedPoint:
@@ -82,9 +93,19 @@ def load_config(path: Path) -> AnalyticsConfig:
     grid_height=int(heatmap_raw.get("grid_height", 4)),
   )
 
+  alert_raw = data.get("alert_thresholds", {})
+  alert_thresholds = AlertThresholds(
+    queue_long_wait=float(alert_raw.get("queue_long_wait", 180.0)),
+    queue_high_count=int(alert_raw.get("queue_high_count", 8)),
+    crowd_surge_threshold=int(alert_raw.get("crowd_surge_threshold", 5)),
+    crowd_surge_window=float(alert_raw.get("crowd_surge_window", 30.0)),
+    table_long_stay=float(alert_raw.get("table_long_stay", 7200.0)),
+  )
+
   return AnalyticsConfig(
     entrance_line=entrance_line,
     queue_zone=queue_zone,
     tables=tables,
     heatmap=heatmap,
+    alert_thresholds=alert_thresholds,
   )
