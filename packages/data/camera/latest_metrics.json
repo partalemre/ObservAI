@@ -1,0 +1,52 @@
+{
+  "ts": "2025-10-13T15:44:47.432773",
+  "peopleIn": 2,
+  "peopleOut": 2,
+  "current": 7,
+  "ageBuckets": {
+    "0-17": 0,
+    "18-25": 0,
+    "26-35": 0,
+    "36-50": 0,
+    "50+": 0
+  },
+  "gender": {
+    "male": 0,
+    "female": 0,
+    "unknown": 7
+  },
+  "queue": {
+    "current": 1,
+    "averageWaitSeconds": 4.3,
+    "longestWaitSeconds": 47.4
+  },
+  "tables": [
+    {
+      "id": "table-1",
+      "name": "Window Booth",
+      "currentOccupants": 0,
+      "avgStaySeconds": 0.0,
+      "longestStaySeconds": 0.0
+    },
+    {
+      "id": "table-2",
+      "name": "Middle High-top",
+      "currentOccupants": 0,
+      "avgStaySeconds": 0.0,
+      "longestStaySeconds": 0.0
+    },
+    {
+      "id": "table-3",
+      "name": "Quiet Corner",
+      "currentOccupants": 0,
+      "avgStaySeconds": 0.0,
+      "longestStaySeconds": 0.0
+    }
+  ],
+  "heatmap": [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 173, 0, 0],
+    [1483, 1771, 837, 5128, 1717, 126],
+    [4429, 2500, 569, 6, 353, 1215]
+  ]
+}

@@ -1,0 +1,13 @@
+numpy>=1.23
+opencv-python>=4.8.0
+ultralytics>=8.1.0
+insightface>=0.7.3
+onnxruntime>=1.16.0
+pyyaml>=6.0
+shapely>=2.0
+lapx>=0.5.2
+
+[dev]
+black>=23.3.0
+mypy>=1.6.0
+ruff>=0.1.0

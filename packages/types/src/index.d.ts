@@ -39,6 +39,19 @@ export interface CameraMetricsDTO {
     female: number
     unknown: number
   }
+  queue?: {
+    current: number
+    averageWaitSeconds: number
+    longestWaitSeconds: number
+  }
+  tables?: Array<{
+    id: string
+    name?: string
+    currentOccupants: number
+    avgStaySeconds: number
+    longestStaySeconds: number
+  }>
+  heatmap?: number[][]
   deviceId?: string
   location?: string
 }

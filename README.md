@@ -6,7 +6,7 @@ Cafe-odaklı SaaS: QR Menü, POS entegrasyonu, Envanter, Kamera Analitiği, Kamp
 
 - Frontend: Next.js 14 + TS
 - Backend API: NestJS + TS (Prisma, Swagger, WS)
-- AI Camera: FastAPI (Python, OpenCV)
+- AI Camera: Python CLI (Ultralytics YOLOv8, InsightFace, OpenCV)
 - DB: PostgreSQL
 - Cache/Queue: Redis
 - Monorepo: pnpm + turborepo
@@ -16,8 +16,16 @@ Cafe-odaklı SaaS: QR Menü, POS entegrasyonu, Envanter, Kamera Analitiği, Kamp
 1. `cp .env.example .env`
 2. `pnpm i` (root)
 3. `docker compose -f infra/docker/compose.dev.yml up -d` (postgres, redis)
-4. `pnpm dev` (web, api, ai-camera eşzamanlı)
-5. Postman koleksiyonunu `infra/postman/ObservAI.postman_collection.json` içinden import edin.
+4. `pnpm dev` (web + api)
+5. `cd packages/camera-analytics && python -m venv .venv && source .venv/bin/activate && pip install -e .` (kamera analitiği için bir defalık kurulum)
+6. `python -m camera_analytics.run --display` (MacBook kamerasından metrik üretimi)
+7. Postman koleksiyonunu `infra/postman/ObservAI.postman_collection.json` içinden import edin.
+
+## Kamera Analitiğini Çalıştırma
+
+- Varsayılan metrik çıktısı `data/camera/latest_metrics.json` dosyasına yazılır. NestJS API bu dosyayı `CameraService` üzerinden okuyarak `/camera/people-count` endpointine sunar.
+- Çıktı konumunu değiştirmek için `python -m camera_analytics.run --output /path/to/metrics.json` veya API tarafında `CAMERA_METRICS_PATH=/path/to/metrics.json` kullanın.
+- Kamera bölgelerini (`entrance`, `queue`, masa poligonları) `packages/camera-analytics/config/default_zones.yaml` dosyasında normalize koordinatlar ile güncelleyebilirsiniz.
 
 ## Klasörler
 
