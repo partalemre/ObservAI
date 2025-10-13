@@ -1,12 +1,12 @@
 {
-  "ts": "2025-10-13T19:18:32.151643",
+  "ts": "2025-10-13T19:50:05.597796",
   "peopleIn": 0,
   "peopleOut": 0,
   "current": 2,
   "ageBuckets": {
     "child": 0,
     "teen": 0,
-    "adult": 2,
+    "adult": 1,
     "senior": 0
   },
   "gender": {
@@ -15,9 +15,9 @@
     "unknown": 1
   },
   "queue": {
-    "current": 1,
-    "averageWaitSeconds": 4.7,
-    "longestWaitSeconds": 14.4
+    "current": 0,
+    "averageWaitSeconds": 4.0,
+    "longestWaitSeconds": 6.6
   },
   "tables": [
     {
@@ -31,21 +31,21 @@
       "id": "table-2",
       "name": "Middle High-top",
       "currentOccupants": 0,
-      "avgStaySeconds": 3.7,
-      "longestStaySeconds": 3.7
+      "avgStaySeconds": 10.9,
+      "longestStaySeconds": 47.7
     },
     {
       "id": "table-3",
       "name": "Quiet Corner",
-      "currentOccupants": 0,
-      "avgStaySeconds": 61.9,
-      "longestStaySeconds": 61.9
+      "currentOccupants": 1,
+      "avgStaySeconds": 12.3,
+      "longestStaySeconds": 51.6
     }
   ],
   "heatmap": [
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 43, 112, 238, 124],
-    [0, 50, 138, 3, 6, 5],
-    [0, 4, 5, 3, 1, 0]
+    [0, 1, 1121, 566, 203, 66],
+    [4, 1, 90, 116, 67, 403],
+    [4, 7, 114, 78, 8, 63],
+    [0, 0, 1, 1, 11, 0]
   ]
 }

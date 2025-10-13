@@ -82,18 +82,72 @@ async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time metrics streaming"""
     await manager.connect(websocket)
     metrics_path = Path(__file__).resolve().parents[2] / "data" / "camera" / "latest_metrics.json"
+    subscribed_channel = None
 
     try:
         last_modified = 0
         while True:
-            if metrics_path.exists():
+            # Check for incoming messages (subscription requests)
+            try:
+                message = await asyncio.wait_for(websocket.receive_json(), timeout=0.1)
+                if message.get('type') == 'subscribe':
+                    subscribed_channel = message.get('channel')
+                    print(f"Client subscribed to channel: {subscribed_channel}")
+                elif message.get('type') == 'ping':
+                    await websocket.send_json({"type": "pong"})
+            except asyncio.TimeoutError:
+                pass
+            
+            # Send metrics if client is subscribed to camera channel
+            if subscribed_channel == 'camera' and metrics_path.exists():
                 current_modified = metrics_path.stat().st_mtime
                 if current_modified > last_modified:
                     last_modified = current_modified
                     try:
                         with open(metrics_path, "r") as f:
-                            data = json.load(f)
-                            await websocket.send_json(data)
+                            raw_data = json.load(f)
+                            
+                            # Transform data to match frontend format
+                            transformed_data = {
+                                "current": raw_data.get("current", 0),
+                                "entriesHour": raw_data.get("peopleIn", 0),
+                                "exitsHour": raw_data.get("peopleOut", 0),
+                                "avgDuration": 45,  # Mock for now
+                                "heatmap": [],  # Will transform below
+                                "gender": raw_data.get("gender", {}),
+                                "age": {
+                                    "0-18": raw_data.get("ageBuckets", {}).get("child", 0) + raw_data.get("ageBuckets", {}).get("teen", 0),
+                                    "19-30": int(raw_data.get("ageBuckets", {}).get("adult", 0) * 0.4),
+                                    "31-45": int(raw_data.get("ageBuckets", {}).get("adult", 0) * 0.4),
+                                    "46-60": int(raw_data.get("ageBuckets", {}).get("adult", 0) * 0.2),
+                                    "60+": raw_data.get("ageBuckets", {}).get("senior", 0),
+                                },
+                                "timeline": [],  # Mock for now
+                                "lastUpdate": raw_data.get("ts", datetime.utcnow().isoformat())
+                            }
+                            
+                            # Transform heatmap to frontend format
+                            heatmap_raw = raw_data.get("heatmap", [])
+                            zones = ["Giriş", "Kasa", "Sipariş Bankosu", "Oturma Alanı 1", "Oturma Alanı 2", "Bar", "Bahçe", "Tuvalet", "Çıkış"]
+                            for y, row in enumerate(heatmap_raw):
+                                for x, intensity in enumerate(row):
+                                    zone_index = y * len(row) + x
+                                    zone_name = zones[zone_index] if zone_index < len(zones) else f"Zone {zone_index}"
+                                    transformed_data["heatmap"].append({
+                                        "x": x * 100,
+                                        "y": y * 100,
+                                        "intensity": int(intensity),
+                                        "zone": zone_name
+                                    })
+                            
+                            # Send as WebSocket message with proper format
+                            message = {
+                                "channel": "camera",
+                                "data": transformed_data,
+                                "timestamp": int(datetime.utcnow().timestamp() * 1000),
+                                "type": "data"
+                            }
+                            await websocket.send_json(message)
                     except Exception as e:
                         print(f"Error streaming metrics: {e}")
 
