@@ -1,8 +1,8 @@
 {
-  "ts": "2025-10-13T19:50:05.597796",
+  "ts": "2025-10-13T20:04:20.541540",
   "peopleIn": 0,
   "peopleOut": 0,
-  "current": 2,
+  "current": 1,
   "ageBuckets": {
     "child": 0,
     "teen": 0,
@@ -12,40 +12,40 @@
   "gender": {
     "male": 1,
     "female": 0,
-    "unknown": 1
+    "unknown": 0
   },
   "queue": {
     "current": 0,
-    "averageWaitSeconds": 4.0,
-    "longestWaitSeconds": 6.6
+    "averageWaitSeconds": 4.5,
+    "longestWaitSeconds": 18.4
   },
   "tables": [
     {
       "id": "table-1",
       "name": "Window Booth",
       "currentOccupants": 0,
-      "avgStaySeconds": 0.0,
-      "longestStaySeconds": 0.0
+      "avgStaySeconds": 3.2,
+      "longestStaySeconds": 3.2
     },
     {
       "id": "table-2",
       "name": "Middle High-top",
       "currentOccupants": 0,
-      "avgStaySeconds": 10.9,
-      "longestStaySeconds": 47.7
+      "avgStaySeconds": 0.7,
+      "longestStaySeconds": 0.7
     },
     {
       "id": "table-3",
       "name": "Quiet Corner",
-      "currentOccupants": 1,
-      "avgStaySeconds": 12.3,
-      "longestStaySeconds": 51.6
+      "currentOccupants": 0,
+      "avgStaySeconds": 0.0,
+      "longestStaySeconds": 0.0
     }
   ],
   "heatmap": [
-    [0, 1, 1121, 566, 203, 66],
-    [4, 1, 90, 116, 67, 403],
-    [4, 7, 114, 78, 8, 63],
-    [0, 0, 1, 1, 11, 0]
+    [0, 0, 0, 2, 0, 0],
+    [1, 1, 64, 20, 1, 0],
+    [0, 0, 228, 54, 2, 12],
+    [7, 0, 0, 2, 0, 0]
   ]
 }

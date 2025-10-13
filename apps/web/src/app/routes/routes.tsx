@@ -18,6 +18,7 @@ import {
 } from '../pages'
 import ModernDashboard from '../pages/ModernDashboard'
 import ModernLogin from '../pages/ModernLogin'
+import CameraAnalytics from '../(dashboard)/camera/page'
 import { useAuthStore } from '../../store/authStore'
 
 export const ProtectedLayout: React.FC = () => {
@@ -99,7 +100,7 @@ export const routesConfig = [
     children: [
       { path: '/dashboard', element: <ModernDashboard /> },
       { path: '/pos', element: <POS /> },
-      { path: '/camera', element: <div>Camera Analytics</div> }, // Temporary placeholder
+      { path: '/camera', element: <CameraAnalytics /> },
       { path: '/menu', element: <Menu /> },
       { path: '/kitchen', element: <Kitchen /> },
       { path: '/inventory', element: <Inventory /> },
