@@ -1,5 +1,6 @@
 README.md
 pyproject.toml
+setup.py
 camera_analytics/__init__.py
 camera_analytics/__main__.py
 camera_analytics/analytics.py
@@ -7,6 +8,8 @@ camera_analytics/config.py
 camera_analytics/geometry.py
 camera_analytics/metrics.py
 camera_analytics/run.py
+camera_analytics/run_with_websocket.py
+camera_analytics/websocket_server.py
 camera_analytics.egg-info/PKG-INFO
 camera_analytics.egg-info/SOURCES.txt
 camera_analytics.egg-info/dependency_links.txt

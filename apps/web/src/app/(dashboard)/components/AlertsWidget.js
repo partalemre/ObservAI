@@ -20,14 +20,14 @@ export const AlertsWidget = () => {
   const getAlertIcon = (type) => {
     switch (type) {
       case 'warning':
-        return _jsx(AlertTriangle, { className: 'w-4 h-4' })
+        return _jsx(AlertTriangle, { className: 'h-4 w-4' })
       case 'error':
-        return _jsx(XCircle, { className: 'w-4 h-4' })
+        return _jsx(XCircle, { className: 'h-4 w-4' })
       case 'success':
-        return _jsx(CheckCircle, { className: 'w-4 h-4' })
+        return _jsx(CheckCircle, { className: 'h-4 w-4' })
       case 'info':
       default:
-        return _jsx(Info, { className: 'w-4 h-4' })
+        return _jsx(Info, { className: 'h-4 w-4' })
     }
   }
   const getAlertStyle = (type) => {
@@ -61,7 +61,7 @@ export const AlertsWidget = () => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-4',
+          className: 'mb-4 flex items-center gap-3',
           children: [
             _jsx(Skeleton, { className: 'h-10 w-10 rounded-lg' }),
             _jsx(Skeleton, { className: 'h-6 w-24' }),
@@ -73,7 +73,7 @@ export const AlertsWidget = () => {
             _jsx(
               'div',
               {
-                className: 'p-3 border rounded-lg',
+                className: 'rounded-lg border p-3',
                 children: _jsxs('div', {
                   className: 'flex items-start gap-3',
                   children: [
@@ -81,7 +81,7 @@ export const AlertsWidget = () => {
                     _jsxs('div', {
                       className: 'flex-1',
                       children: [
-                        _jsx(Skeleton, { className: 'h-4 w-full mb-2' }),
+                        _jsx(Skeleton, { className: 'mb-2 h-4 w-full' }),
                         _jsx(Skeleton, { className: 'h-3 w-16' }),
                       ],
                     }),
@@ -97,27 +97,27 @@ export const AlertsWidget = () => {
   }
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5, delay: 0.5 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center justify-between mb-6',
+        className: 'mb-6 flex items-center justify-between',
         children: [
           _jsxs('div', {
             className: 'flex items-center gap-3',
             children: [
               _jsxs('div', {
                 className:
-                  'relative w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center',
+                  'relative flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/20',
                 children: [
-                  _jsx(Bell, { className: 'w-5 h-5 text-red-400' }),
+                  _jsx(Bell, { className: 'h-5 w-5 text-red-400' }),
                   alerts &&
                     alerts.length > 0 &&
                     _jsx(motion.div, {
                       className:
-                        'absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-bold',
+                        'absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white',
                       initial: { scale: 0 },
                       animate: { scale: 1 },
                       transition: {
@@ -145,13 +145,13 @@ export const AlertsWidget = () => {
           }),
           _jsxs('div', {
             className:
-              'flex items-center gap-2 text-xs text-white/60 bg-white/10 px-2 py-1 rounded-full',
-            children: [_jsx(Clock, { className: 'w-3 h-3' }), 'Canl\u0131'],
+              'flex items-center gap-2 rounded-full bg-white/10 px-2 py-1 text-xs text-white/60',
+            children: [_jsx(Clock, { className: 'h-3 w-3' }), 'Canl\u0131'],
           }),
         ],
       }),
       _jsx('div', {
-        className: 'space-y-3 max-h-64 overflow-y-auto custom-scrollbar',
+        className: 'custom-scrollbar max-h-64 space-y-3 overflow-y-auto',
         children: _jsx(AnimatePresence, {
           children:
             alerts && alerts.length > 0
@@ -159,7 +159,7 @@ export const AlertsWidget = () => {
                   _jsx(
                     motion.div,
                     {
-                      className: `p-3 rounded-lg border transition-all duration-200 hover:scale-[1.02] ${getAlertStyle(alert.type)}`,
+                      className: `rounded-lg border p-3 transition-all duration-200 hover:scale-[1.02] ${getAlertStyle(alert.type)}`,
                       initial: { opacity: 0, x: -20, scale: 0.95 },
                       animate: { opacity: 1, x: 0, scale: 1 },
                       exit: { opacity: 0, x: 20, scale: 0.95 },
@@ -173,7 +173,7 @@ export const AlertsWidget = () => {
                             children: [
                               getAlertIcon(alert.type),
                               _jsx(motion.div, {
-                                className: `absolute -top-1 -right-1 w-2 h-2 rounded-full ${getPulseColor(alert.type)}`,
+                                className: `absolute -top-1 -right-1 h-2 w-2 rounded-full ${getPulseColor(alert.type)}`,
                                 animate: {
                                   scale: [1, 1.2, 1],
                                   opacity: [0.7, 1, 0.7],
@@ -187,18 +187,18 @@ export const AlertsWidget = () => {
                             ],
                           }),
                           _jsxs('div', {
-                            className: 'flex-1 min-w-0',
+                            className: 'min-w-0 flex-1',
                             children: [
                               _jsx('p', {
                                 className:
-                                  'text-sm font-medium text-white/90 mb-1',
+                                  'mb-1 text-sm font-medium text-white/90',
                                 children: alert.message,
                               }),
                               _jsxs('div', {
                                 className:
                                   'flex items-center gap-1 text-xs opacity-70',
                                 children: [
-                                  _jsx(Clock, { className: 'w-3 h-3' }),
+                                  _jsx(Clock, { className: 'h-3 w-3' }),
                                   alert.time,
                                 ],
                               }),
@@ -211,15 +211,15 @@ export const AlertsWidget = () => {
                   )
                 )
               : _jsxs(motion.div, {
-                  className: 'text-center py-8',
+                  className: 'py-8 text-center',
                   initial: { opacity: 0 },
                   animate: { opacity: 1 },
                   children: [
                     _jsx('div', {
                       className:
-                        'w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center',
+                        'mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20',
                       children: _jsx(CheckCircle, {
-                        className: 'w-8 h-8 text-green-400',
+                        className: 'h-8 w-8 text-green-400',
                       }),
                     }),
                     _jsx('p', {
@@ -227,7 +227,7 @@ export const AlertsWidget = () => {
                       children: 'Aktif uyar\u0131 yok',
                     }),
                     _jsx('p', {
-                      className: 'text-sm text-white/40 mt-1',
+                      className: 'mt-1 text-sm text-white/40',
                       children: 'Sistem normal \u00E7al\u0131\u015F\u0131yor',
                     }),
                   ],
@@ -237,10 +237,10 @@ export const AlertsWidget = () => {
       alerts &&
         alerts.length > 3 &&
         _jsx('div', {
-          className: 'mt-4 pt-4 border-t border-white/10',
+          className: 'mt-4 border-t border-white/10 pt-4',
           children: _jsxs('button', {
             className:
-              'w-full text-sm text-primary-400 hover:text-primary-300 transition-colors duration-200 font-medium',
+              'text-primary-400 hover:text-primary-300 w-full text-sm font-medium transition-colors duration-200',
             children: [
               'T\u00FCm\u00FCn\u00FC G\u00F6r\u00FCnt\u00FCle (',
               alerts.length - 3,

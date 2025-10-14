@@ -166,34 +166,34 @@ const POSPage = () => {
     },
   }
   return _jsxs(motion.div, {
-    className: 'p-6 min-h-screen bg-dark-900',
+    className: 'bg-dark-900 min-h-screen p-6',
     variants: containerVariants,
     initial: 'hidden',
     animate: 'visible',
     children: [
       _jsxs(motion.div, {
         className:
-          'flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6',
+          'mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between',
         variants: itemVariants,
         children: [
           _jsxs('div', {
             children: [
               _jsxs('h1', {
                 className:
-                  'text-3xl font-bold text-white font-display flex items-center gap-3',
+                  'font-display flex items-center gap-3 text-3xl font-bold text-white',
                 children: [
                   _jsx('div', {
                     className:
-                      'w-10 h-10 bg-primary-500/20 rounded-xl flex items-center justify-center',
+                      'bg-primary-500/20 flex h-10 w-10 items-center justify-center rounded-xl',
                     children: _jsx(Zap, {
-                      className: 'w-5 h-5 text-primary-400',
+                      className: 'text-primary-400 h-5 w-5',
                     }),
                   }),
                   'POS Sistemi',
                 ],
               }),
               _jsx('p', {
-                className: 'text-white/70 mt-1',
+                className: 'mt-1 text-white/70',
                 children:
                   'H\u0131zl\u0131 ve kolay sat\u0131\u015F noktas\u0131',
               }),
@@ -204,7 +204,7 @@ const POSPage = () => {
             children: [
               _jsx(Search, {
                 className:
-                  'absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400',
+                  'absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400',
               }),
               _jsx('input', {
                 type: 'text',
@@ -212,7 +212,7 @@ const POSPage = () => {
                 value: searchQuery,
                 onChange: (e) => setSearchQuery(e.target.value),
                 className:
-                  'pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary-500 focus:bg-white/20 transition-all w-64',
+                  'focus:border-primary-500 w-64 rounded-lg border border-white/20 bg-white/10 py-2 pr-4 pl-10 text-white placeholder-gray-400 transition-all focus:bg-white/20 focus:outline-none',
               }),
             ],
           }),
@@ -220,10 +220,10 @@ const POSPage = () => {
       }),
       _jsxs('div', {
         className:
-          'grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 h-[calc(100vh-10rem)]',
+          'grid h-[calc(100vh-10rem)] grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-6',
         children: [
           _jsxs('div', {
-            className: 'lg:col-span-2 space-y-4',
+            className: 'space-y-4 lg:col-span-2',
             children: [
               _jsx(motion.div, {
                 className: 'glass-card rounded-xl p-4',
@@ -235,11 +235,11 @@ const POSPage = () => {
               }),
               _jsxs(motion.div, {
                 className:
-                  'glass-card rounded-xl p-6 overflow-y-auto max-h-[calc(100vh-18rem)]',
+                  'glass-card max-h-[calc(100vh-18rem)] overflow-y-auto rounded-xl p-6',
                 variants: itemVariants,
                 children: [
                   _jsxs('div', {
-                    className: 'flex items-center justify-between mb-4',
+                    className: 'mb-4 flex items-center justify-between',
                     children: [
                       _jsxs('h2', {
                         className: 'text-lg font-semibold text-white',
@@ -251,9 +251,9 @@ const POSPage = () => {
                       }),
                       _jsxs('button', {
                         className:
-                          'flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm text-gray-400 hover:text-white transition-colors',
+                          'flex items-center gap-2 rounded-lg bg-white/10 px-3 py-1.5 text-sm text-gray-400 transition-colors hover:bg-white/20 hover:text-white',
                         children: [
-                          _jsx(Filter, { className: 'w-4 h-4' }),
+                          _jsx(Filter, { className: 'h-4 w-4' }),
                           'Filtrele',
                         ],
                       }),
@@ -261,7 +261,7 @@ const POSPage = () => {
                   }),
                   _jsx('div', {
                     className:
-                      'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4',
+                      'grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4',
                     children: _jsx(AnimatePresence, {
                       mode: 'popLayout',
                       children: filteredProducts.map((product, index) =>
@@ -284,10 +284,10 @@ const POSPage = () => {
                   }),
                   filteredProducts.length === 0 &&
                     _jsxs('div', {
-                      className: 'text-center py-12 text-gray-400',
+                      className: 'py-12 text-center text-gray-400',
                       children: [
                         _jsx(Search, {
-                          className: 'w-12 h-12 mx-auto mb-4 opacity-50',
+                          className: 'mx-auto mb-4 h-12 w-12 opacity-50',
                         }),
                         _jsx('p', {
                           children:
@@ -300,22 +300,22 @@ const POSPage = () => {
             ],
           }),
           _jsxs(motion.div, {
-            className: 'glass-card rounded-xl p-6 flex flex-col',
+            className: 'glass-card flex flex-col rounded-xl p-6',
             variants: itemVariants,
             children: [
               _jsxs('div', {
-                className: 'flex items-center justify-between mb-4',
+                className: 'mb-4 flex items-center justify-between',
                 children: [
                   _jsxs('h2', {
                     className:
-                      'text-xl font-bold text-white flex items-center gap-2',
+                      'flex items-center gap-2 text-xl font-bold text-white',
                     children: [
-                      _jsx(ShoppingCart, { className: 'w-5 h-5' }),
+                      _jsx(ShoppingCart, { className: 'h-5 w-5' }),
                       'Sepet',
                       itemCount > 0 &&
                         _jsx('span', {
                           className:
-                            'bg-primary-500 text-white text-xs px-2 py-1 rounded-full',
+                            'bg-primary-500 rounded-full px-2 py-1 text-xs text-white',
                           children: itemCount,
                         }),
                     ],
@@ -324,7 +324,7 @@ const POSPage = () => {
                     _jsx('button', {
                       onClick: clearCart,
                       className:
-                        'text-red-400 hover:text-red-300 text-sm transition-colors',
+                        'text-sm text-red-400 transition-colors hover:text-red-300',
                       children: 'Temizle',
                     }),
                 ],
@@ -334,14 +334,14 @@ const POSPage = () => {
                 children:
                   cart.length === 0
                     ? _jsxs('div', {
-                        className: 'text-center py-12 text-gray-400',
+                        className: 'py-12 text-center text-gray-400',
                         children: [
                           _jsx(ShoppingCart, {
-                            className: 'w-12 h-12 mx-auto mb-4 opacity-50',
+                            className: 'mx-auto mb-4 h-12 w-12 opacity-50',
                           }),
                           _jsx('p', { children: 'Sepetiniz bo\u015F' }),
                           _jsx('p', {
-                            className: 'text-sm mt-1',
+                            className: 'mt-1 text-sm',
                             children:
                               '\u00DCr\u00FCn eklemek i\u00E7in yukar\u0131daki \u00FCr\u00FCnlere t\u0131klay\u0131n',
                           }),
@@ -369,12 +369,12 @@ const POSPage = () => {
               }),
               cart.length > 0 &&
                 _jsxs('div', {
-                  className: 'border-t border-white/10 pt-4 mt-4',
+                  className: 'mt-4 border-t border-white/10 pt-4',
                   children: [
                     _jsx(CartSummary, { cart: cart }),
                     _jsxs(motion.button, {
                       className:
-                        'w-full mt-4 py-3 bg-gradient-to-r from-primary-500 to-purple-500 rounded-lg text-white font-medium hover:shadow-lg hover:shadow-primary-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed',
+                        'from-primary-500 hover:shadow-primary-500/25 mt-4 w-full rounded-lg bg-gradient-to-r to-purple-500 py-3 font-medium text-white transition-all hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50',
                       whileHover: { scale: 1.02 },
                       whileTap: { scale: 0.98 },
                       disabled: cart.length === 0,

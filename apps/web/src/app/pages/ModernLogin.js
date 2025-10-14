@@ -69,29 +69,29 @@ const ModernLogin = () => {
   }
   const isLoading = loginMutation.isPending || meMutation.isPending
   return _jsxs('div', {
-    className: 'min-h-screen flex',
+    className: 'flex min-h-screen',
     children: [
       _jsxs('div', {
         className:
-          'hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 relative overflow-hidden',
+          'relative hidden overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 lg:flex lg:w-1/2',
         children: [
           _jsx('div', { className: 'absolute inset-0 bg-black/20' }),
           _jsx('div', {
             className:
-              'relative z-10 flex flex-col justify-center items-start p-12 text-white',
+              'relative z-10 flex flex-col items-start justify-center p-12 text-white',
             children: _jsxs(motion.div, {
               initial: { opacity: 0, x: -50 },
               animate: { opacity: 1, x: 0 },
               transition: { duration: 0.8 },
               children: [
                 _jsxs('div', {
-                  className: 'flex items-center gap-3 mb-8',
+                  className: 'mb-8 flex items-center gap-3',
                   children: [
                     _jsx('div', {
                       className:
-                        'w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center',
+                        'flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm',
                       children: _jsx('svg', {
-                        className: 'w-8 h-8',
+                        className: 'h-8 w-8',
                         viewBox: '0 0 24 24',
                         fill: 'currentColor',
                         children: _jsx('path', {
@@ -106,7 +106,7 @@ const ModernLogin = () => {
                   ],
                 }),
                 _jsxs('h2', {
-                  className: 'text-4xl font-bold mb-6 leading-tight',
+                  className: 'mb-6 text-4xl leading-tight font-bold',
                   children: [
                     'Welcome to the future of',
                     _jsx('br', {}),
@@ -114,13 +114,13 @@ const ModernLogin = () => {
                   ],
                 }),
                 _jsxs('div', {
-                  className: 'space-y-4 mb-8',
+                  className: 'mb-8 space-y-4',
                   children: [
                     _jsxs('div', {
                       className: 'flex items-center gap-3',
                       children: [
                         _jsx(CheckCircle, {
-                          className: 'w-6 h-6 text-green-300',
+                          className: 'h-6 w-6 text-green-300',
                         }),
                         _jsx('span', {
                           className: 'text-lg',
@@ -132,7 +132,7 @@ const ModernLogin = () => {
                       className: 'flex items-center gap-3',
                       children: [
                         _jsx(CheckCircle, {
-                          className: 'w-6 h-6 text-green-300',
+                          className: 'h-6 w-6 text-green-300',
                         }),
                         _jsx('span', {
                           className: 'text-lg',
@@ -144,7 +144,7 @@ const ModernLogin = () => {
                       className: 'flex items-center gap-3',
                       children: [
                         _jsx(CheckCircle, {
-                          className: 'w-6 h-6 text-green-300',
+                          className: 'h-6 w-6 text-green-300',
                         }),
                         _jsx('span', {
                           className: 'text-lg',
@@ -159,16 +159,16 @@ const ModernLogin = () => {
           }),
           _jsx('div', {
             className:
-              'absolute top-20 right-20 w-32 h-32 bg-white/10 rounded-full blur-3xl',
+              'absolute top-20 right-20 h-32 w-32 rounded-full bg-white/10 blur-3xl',
           }),
           _jsx('div', {
             className:
-              'absolute bottom-20 left-20 w-24 h-24 bg-white/10 rounded-full blur-2xl',
+              'absolute bottom-20 left-20 h-24 w-24 rounded-full bg-white/10 blur-2xl',
           }),
         ],
       }),
       _jsx('div', {
-        className: 'flex-1 flex items-center justify-center p-8 bg-gray-50',
+        className: 'flex flex-1 items-center justify-center bg-gray-50 p-8',
         children: _jsxs(motion.div, {
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
@@ -176,15 +176,15 @@ const ModernLogin = () => {
           className: 'w-full max-w-md',
           children: [
             _jsx('div', {
-              className: 'lg:hidden text-center mb-8',
+              className: 'mb-8 text-center lg:hidden',
               children: _jsxs('div', {
-                className: 'inline-flex items-center gap-3 mb-4',
+                className: 'mb-4 inline-flex items-center gap-3',
                 children: [
                   _jsx('div', {
                     className:
-                      'w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center',
+                      'flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600',
                     children: _jsx('svg', {
-                      className: 'w-6 h-6 text-white',
+                      className: 'h-6 w-6 text-white',
                       viewBox: '0 0 24 24',
                       fill: 'currentColor',
                       children: _jsx('path', {
@@ -200,13 +200,13 @@ const ModernLogin = () => {
               }),
             }),
             _jsxs('div', {
-              className: 'bg-white rounded-2xl shadow-xl p-8',
+              className: 'rounded-2xl bg-white p-8 shadow-xl',
               children: [
                 _jsxs('div', {
-                  className: 'text-center mb-8',
+                  className: 'mb-8 text-center',
                   children: [
                     _jsx('h2', {
-                      className: 'text-2xl font-bold text-gray-900 mb-2',
+                      className: 'mb-2 text-2xl font-bold text-gray-900',
                       children: 'Sign in to your account',
                     }),
                     _jsx('p', {
@@ -225,7 +225,7 @@ const ModernLogin = () => {
                         _jsx('label', {
                           htmlFor: 'email',
                           className:
-                            'block text-sm font-medium text-gray-700 mb-2',
+                            'mb-2 block text-sm font-medium text-gray-700',
                           children: 'Email address *',
                         }),
                         _jsx('input', {
@@ -236,11 +236,11 @@ const ModernLogin = () => {
                           value: email,
                           onChange: (e) => setEmail(e.target.value),
                           placeholder: 'example@email.com',
-                          className: `w-full px-4 py-3 rounded-lg border transition-colors ${
+                          className: `w-full rounded-lg border px-4 py-3 transition-colors ${
                             errors.email
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                               : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-200'
-                          } focus:outline-none focus:ring-2`,
+                          } focus:ring-2 focus:outline-none`,
                         }),
                         errors.email &&
                           _jsx('p', {
@@ -254,7 +254,7 @@ const ModernLogin = () => {
                         _jsx('label', {
                           htmlFor: 'password',
                           className:
-                            'block text-sm font-medium text-gray-700 mb-2',
+                            'mb-2 block text-sm font-medium text-gray-700',
                           children: 'Password *',
                         }),
                         _jsxs('div', {
@@ -268,20 +268,20 @@ const ModernLogin = () => {
                               value: password,
                               onChange: (e) => setPassword(e.target.value),
                               placeholder: 'Enter your password',
-                              className: `w-full px-4 py-3 pr-12 rounded-lg border transition-colors ${
+                              className: `w-full rounded-lg border px-4 py-3 pr-12 transition-colors ${
                                 errors.password
                                   ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
                                   : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-200'
-                              } focus:outline-none focus:ring-2`,
+                              } focus:ring-2 focus:outline-none`,
                             }),
                             _jsx('button', {
                               type: 'button',
                               onClick: () => setShowPassword(!showPassword),
                               className:
-                                'absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600',
+                                'absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400 hover:text-gray-600',
                               children: showPassword
-                                ? _jsx(EyeOff, { className: 'w-5 h-5' })
-                                : _jsx(Eye, { className: 'w-5 h-5' }),
+                                ? _jsx(EyeOff, { className: 'h-5 w-5' })
+                                : _jsx(Eye, { className: 'h-5 w-5' }),
                             }),
                           ],
                         }),
@@ -294,7 +294,7 @@ const ModernLogin = () => {
                     }),
                     _jsx('div', {
                       className:
-                        'bg-blue-50 border border-blue-200 rounded-lg p-3',
+                        'rounded-lg border border-blue-200 bg-blue-50 p-3',
                       children: _jsxs('p', {
                         className: 'text-sm text-blue-800',
                         children: [
@@ -310,20 +310,20 @@ const ModernLogin = () => {
                       type: 'submit',
                       disabled: isLoading,
                       className:
-                        'w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2',
+                        'flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white transition-colors hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:bg-indigo-400',
                       children: [
                         isLoading &&
-                          _jsx(Loader2, { className: 'w-4 h-4 animate-spin' }),
+                          _jsx(Loader2, { className: 'h-4 w-4 animate-spin' }),
                         isLoading ? 'Signing in...' : 'Sign in',
                       ],
                     }),
                     _jsxs('div', {
-                      className: 'text-center space-y-2',
+                      className: 'space-y-2 text-center',
                       children: [
                         _jsx('a', {
                           href: '#',
                           className:
-                            'text-sm text-indigo-600 hover:text-indigo-800 transition-colors',
+                            'text-sm text-indigo-600 transition-colors hover:text-indigo-800',
                           children: 'Forgot your password?',
                         }),
                         _jsxs('div', {
@@ -333,14 +333,14 @@ const ModernLogin = () => {
                             _jsx('a', {
                               href: '#',
                               className:
-                                'hover:text-gray-700 transition-colors',
+                                'transition-colors hover:text-gray-700',
                               children: 'Terms of Service',
                             }),
                             _jsx('span', { children: '\u2022' }),
                             _jsx('a', {
                               href: '#',
                               className:
-                                'hover:text-gray-700 transition-colors',
+                                'transition-colors hover:text-gray-700',
                               children: 'Privacy Policy',
                             }),
                           ],

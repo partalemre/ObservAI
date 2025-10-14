@@ -1,5 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from datetime import datetime
 from pathlib import Path
@@ -48,6 +50,13 @@ class ConnectionManager:
                 pass
 
 manager = ConnectionManager()
+
+@app.get("/", response_class=HTMLResponse)
+async def camera_overlay():
+    """Serve iPhone camera overlay page"""
+    html_path = Path(__file__).parent / "camera_overlay.html"
+    with open(html_path, "r", encoding="utf-8") as f:
+        return f.read()
 
 @app.get("/health")
 def health():

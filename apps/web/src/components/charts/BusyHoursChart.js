@@ -137,16 +137,16 @@ export const BusyHoursChart = ({ data, loading }) => {
   }
   if (loading) {
     return _jsxs(motion.div, {
-      className: 'glass-card rounded-xl p-6 h-[400px]',
+      className: 'glass-card h-[400px] rounded-xl p-6',
       initial: { opacity: 0, scale: 0.95 },
       animate: { opacity: 1, scale: 1 },
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-4',
+          className: 'mb-4 flex items-center gap-3',
           children: [
             _jsx('div', {
-              className: 'p-2 bg-green-500/20 rounded-lg',
-              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+              className: 'rounded-lg bg-green-500/20 p-2',
+              children: _jsx(Clock, { className: 'h-5 w-5 text-green-400' }),
             }),
             _jsx('h3', {
               className: 'text-lg font-semibold text-white',
@@ -155,11 +155,11 @@ export const BusyHoursChart = ({ data, loading }) => {
           ],
         }),
         _jsx('div', {
-          className: 'flex items-center justify-center h-[300px]',
+          className: 'flex h-[300px] items-center justify-center',
           children: _jsxs('div', {
             className: 'flex items-center gap-2 text-gray-400',
             children: [
-              _jsx(Loader2, { className: 'w-5 h-5 animate-spin' }),
+              _jsx(Loader2, { className: 'h-5 w-5 animate-spin' }),
               _jsx('span', { children: 'Y\u00FCkleniyor...' }),
             ],
           }),
@@ -169,16 +169,16 @@ export const BusyHoursChart = ({ data, loading }) => {
   }
   if (!chartData || chartData.length === 0) {
     return _jsxs(motion.div, {
-      className: 'glass-card rounded-xl p-6 h-[400px]',
+      className: 'glass-card h-[400px] rounded-xl p-6',
       initial: { opacity: 0, scale: 0.95 },
       animate: { opacity: 1, scale: 1 },
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-4',
+          className: 'mb-4 flex items-center gap-3',
           children: [
             _jsx('div', {
-              className: 'p-2 bg-green-500/20 rounded-lg',
-              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+              className: 'rounded-lg bg-green-500/20 p-2',
+              children: _jsx(Clock, { className: 'h-5 w-5 text-green-400' }),
             }),
             _jsx('h3', {
               className: 'text-lg font-semibold text-white',
@@ -187,11 +187,11 @@ export const BusyHoursChart = ({ data, loading }) => {
           ],
         }),
         _jsx('div', {
-          className: 'flex items-center justify-center h-[300px]',
+          className: 'flex h-[300px] items-center justify-center',
           children: _jsxs('div', {
             className: 'text-center text-gray-400',
             children: [
-              _jsx(Users, { className: 'w-12 h-12 mx-auto mb-3 opacity-50' }),
+              _jsx(Users, { className: 'mx-auto mb-3 h-12 w-12 opacity-50' }),
               _jsx('p', { children: 'Veri bulunamad\u0131' }),
             ],
           }),
@@ -206,13 +206,13 @@ export const BusyHoursChart = ({ data, loading }) => {
     transition: { duration: 0.5, delay: 0.2 },
     children: [
       _jsx('div', {
-        className: 'flex items-center justify-between mb-6',
+        className: 'mb-6 flex items-center justify-between',
         children: _jsxs('div', {
           className: 'flex items-center gap-3',
           children: [
             _jsx('div', {
-              className: 'p-2 bg-green-500/20 rounded-lg',
-              children: _jsx(Clock, { className: 'w-5 h-5 text-green-400' }),
+              className: 'rounded-lg bg-green-500/20 p-2',
+              children: _jsx(Clock, { className: 'h-5 w-5 text-green-400' }),
             }),
             _jsxs('div', {
               children: [
@@ -231,14 +231,14 @@ export const BusyHoursChart = ({ data, loading }) => {
         }),
       }),
       _jsxs('div', {
-        className: 'grid grid-cols-3 gap-4 mb-6',
+        className: 'mb-6 grid grid-cols-3 gap-4',
         children: [
           _jsxs('div', {
             className:
-              'bg-gradient-to-r from-green-500/10 to-green-600/10 rounded-lg p-3 border border-green-500/20',
+              'rounded-lg border border-green-500/20 bg-gradient-to-r from-green-500/10 to-green-600/10 p-3',
             children: [
               _jsx('div', {
-                className: 'text-xs text-green-300 mb-1',
+                className: 'mb-1 text-xs text-green-300',
                 children: 'Toplam Ziyaret\u00E7i',
               }),
               _jsx('div', {
@@ -249,10 +249,10 @@ export const BusyHoursChart = ({ data, loading }) => {
           }),
           _jsxs('div', {
             className:
-              'bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-lg p-3 border border-blue-500/20',
+              'rounded-lg border border-blue-500/20 bg-gradient-to-r from-blue-500/10 to-blue-600/10 p-3',
             children: [
               _jsx('div', {
-                className: 'text-xs text-blue-300 mb-1',
+                className: 'mb-1 text-xs text-blue-300',
                 children: 'Saatlik Ortalama',
               }),
               _jsx('div', {
@@ -263,12 +263,12 @@ export const BusyHoursChart = ({ data, loading }) => {
           }),
           _jsxs('div', {
             className:
-              'bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-lg p-3 border border-amber-500/20',
+              'rounded-lg border border-amber-500/20 bg-gradient-to-r from-amber-500/10 to-amber-600/10 p-3',
             children: [
               _jsxs('div', {
-                className: 'flex items-center gap-1 mb-1',
+                className: 'mb-1 flex items-center gap-1',
                 children: [
-                  _jsx(TrendingUp, { className: 'w-3 h-3 text-amber-400' }),
+                  _jsx(TrendingUp, { className: 'h-3 w-3 text-amber-400' }),
                   _jsx('div', {
                     className: 'text-xs text-amber-300',
                     children: 'En Yo\u011Fun',

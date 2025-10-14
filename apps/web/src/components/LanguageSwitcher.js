@@ -55,8 +55,8 @@ export const LanguageSwitcher = ({
               'flex items-center gap-2 rounded-lg transition-all',
               sizeClasses[size],
               isActive
-                ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30'
-                : 'text-white/70 hover:text-white hover:bg-white/10'
+                ? 'bg-primary-500/20 text-primary-300 border-primary-500/30 border'
+                : 'text-white/70 hover:bg-white/10 hover:text-white'
             ),
             whileHover: { scale: 1.05 },
             whileTap: { scale: 0.95 },
@@ -77,7 +77,7 @@ export const LanguageSwitcher = ({
         handleLocaleChange(nextLocale)
       },
       className: cn(
-        'flex items-center gap-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all',
+        'flex items-center gap-2 rounded-lg text-white/70 transition-all hover:bg-white/10 hover:text-white',
         sizeClasses[size],
         className
       ),
@@ -97,7 +97,7 @@ export const LanguageSwitcher = ({
       _jsxs(motion.button, {
         onClick: () => setIsOpen(!isOpen),
         className: cn(
-          'flex items-center gap-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all',
+          'flex items-center gap-2 rounded-lg text-white/70 transition-all hover:bg-white/10 hover:text-white',
           sizeClasses[size]
         ),
         whileHover: { scale: 1.05 },
@@ -126,7 +126,7 @@ export const LanguageSwitcher = ({
               }),
               _jsx(motion.div, {
                 className:
-                  'absolute top-full right-0 mt-2 min-w-[160px] bg-gray-800/95 backdrop-blur-lg border border-white/20 rounded-lg shadow-xl z-50',
+                  'absolute top-full right-0 z-50 mt-2 min-w-[160px] rounded-lg border border-white/20 bg-gray-800/95 shadow-xl backdrop-blur-lg',
                 initial: { opacity: 0, scale: 0.95, y: -10 },
                 animate: { opacity: 1, scale: 1, y: 0 },
                 exit: { opacity: 0, scale: 0.95, y: -10 },
@@ -141,10 +141,10 @@ export const LanguageSwitcher = ({
                       {
                         onClick: () => handleLocaleChange(locale),
                         className: cn(
-                          'w-full flex items-center justify-between px-4 py-2 text-sm transition-colors',
+                          'flex w-full items-center justify-between px-4 py-2 text-sm transition-colors',
                           isActive
                             ? 'bg-primary-500/20 text-primary-300'
-                            : 'text-white/70 hover:text-white hover:bg-white/10'
+                            : 'text-white/70 hover:bg-white/10 hover:text-white'
                         ),
                         whileHover: { x: 4 },
                         children: [
@@ -163,7 +163,7 @@ export const LanguageSwitcher = ({
                           }),
                           isActive &&
                             _jsx(Check, {
-                              className: 'w-4 h-4 text-primary-400',
+                              className: 'text-primary-400 h-4 w-4',
                             }),
                         ],
                       },

@@ -159,7 +159,7 @@ export const SalesChart = ({ data, loading }) => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center justify-between mb-4',
+          className: 'mb-4 flex items-center justify-between',
           children: [
             _jsx(Skeleton, { className: 'h-6 w-32' }),
             _jsx(Skeleton, { className: 'h-4 w-16' }),
@@ -171,13 +171,13 @@ export const SalesChart = ({ data, loading }) => {
   }
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center justify-between mb-4',
+        className: 'mb-4 flex items-center justify-between',
         children: [
           _jsx('h3', {
             className: 'text-lg font-semibold text-white',
@@ -185,7 +185,7 @@ export const SalesChart = ({ data, loading }) => {
           }),
           _jsx('span', {
             className:
-              'text-xs text-white/60 px-2 py-1 bg-white/10 rounded-full',
+              'rounded-full bg-white/10 px-2 py-1 text-xs text-white/60',
             children: 'Son 24 Saat',
           }),
         ],
@@ -199,7 +199,7 @@ export const SalesChart = ({ data, loading }) => {
             lazyUpdate: true,
           })
         : _jsx('div', {
-            className: 'h-64 flex items-center justify-center text-white/60',
+            className: 'flex h-64 items-center justify-center text-white/60',
             children: 'Veri y\u00FCkleniyor...',
           }),
     ],

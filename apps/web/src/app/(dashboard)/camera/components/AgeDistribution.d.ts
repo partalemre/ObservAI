@@ -8,6 +8,7 @@ interface AgeData {
 }
 interface AgeDistributionProps {
   data?: AgeData
+  loading?: boolean
 }
 export declare const AgeDistribution: React.FC<AgeDistributionProps>
 export {}

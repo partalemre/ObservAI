@@ -29,7 +29,7 @@ export const StaffPerformance = () => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-4',
+          className: 'mb-4 flex items-center gap-3',
           children: [
             _jsx(Skeleton, { className: 'h-10 w-10 rounded-lg' }),
             _jsx(Skeleton, { className: 'h-6 w-40' }),
@@ -47,7 +47,7 @@ export const StaffPerformance = () => {
                   _jsxs('div', {
                     className: 'flex-1',
                     children: [
-                      _jsx(Skeleton, { className: 'h-4 w-24 mb-2' }),
+                      _jsx(Skeleton, { className: 'mb-2 h-4 w-24' }),
                       _jsx(Skeleton, { className: 'h-3 w-16' }),
                     ],
                   }),
@@ -64,18 +64,18 @@ export const StaffPerformance = () => {
   const topPerformer = staff?.[0]
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5, delay: 0.4 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center gap-3 mb-6',
+        className: 'mb-6 flex items-center gap-3',
         children: [
           _jsx('div', {
             className:
-              'w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center',
-            children: _jsx(Users, { className: 'w-5 h-5 text-green-400' }),
+              'flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/20',
+            children: _jsx(Users, { className: 'h-5 w-5 text-green-400' }),
           }),
           _jsxs('div', {
             children: [
@@ -99,7 +99,7 @@ export const StaffPerformance = () => {
             motion.div,
             {
               className:
-                'relative flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-200 group',
+                'group relative flex items-center gap-4 rounded-lg bg-white/5 p-3 transition-colors duration-200 hover:bg-white/10',
               initial: { opacity: 0, x: -20 },
               animate: { opacity: 1, x: 0 },
               transition: { delay: index * 0.1 },
@@ -109,16 +109,20 @@ export const StaffPerformance = () => {
                   className: 'relative',
                   children: [
                     _jsx('div', {
-                      className: `flex items-center justify-center w-10 h-10 rounded-full ${index === 0 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-primary-500/20 text-primary-400'} font-bold text-sm`,
+                      className: `flex h-10 w-10 items-center justify-center rounded-full ${
+                        index === 0
+                          ? 'bg-yellow-500/20 text-yellow-400'
+                          : 'bg-primary-500/20 text-primary-400'
+                      } text-sm font-bold`,
                       children:
                         index === 0
-                          ? _jsx(Trophy, { className: 'w-5 h-5' })
+                          ? _jsx(Trophy, { className: 'h-5 w-5' })
                           : `#${index + 1}`,
                     }),
                     index === 0 &&
                       _jsx('div', {
                         className:
-                          'absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center',
+                          'absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-yellow-400',
                         children: _jsx('span', {
                           className: 'text-xs text-black',
                           children: '\uD83D\uDC51',
@@ -130,18 +134,18 @@ export const StaffPerformance = () => {
                   className: 'flex-1',
                   children: [
                     _jsxs('div', {
-                      className: 'flex items-center justify-between mb-1',
+                      className: 'mb-1 flex items-center justify-between',
                       children: [
                         _jsx('p', {
                           className:
-                            'text-white font-medium group-hover:text-primary-300 transition-colors',
+                            'group-hover:text-primary-300 font-medium text-white transition-colors',
                           children: member.name,
                         }),
                         _jsxs('div', {
-                          className: `flex items-center gap-1 px-2 py-1 rounded-full text-xs ${getPerformanceColor(member.rating)}`,
+                          className: `flex items-center gap-1 rounded-full px-2 py-1 text-xs ${getPerformanceColor(member.rating)}`,
                           children: [
                             _jsx(Star, {
-                              className: 'w-3 h-3',
+                              className: 'h-3 w-3',
                               fill: 'currentColor',
                             }),
                             member.rating.toFixed(1),
@@ -163,7 +167,7 @@ export const StaffPerformance = () => {
                       ],
                     }),
                     _jsx('div', {
-                      className: 'mt-2 w-full bg-white/10 rounded-full h-1.5',
+                      className: 'mt-2 h-1.5 w-full rounded-full bg-white/10',
                       children: _jsx(motion.div, {
                         className: `h-full rounded-full ${index === 0 ? 'bg-yellow-400' : 'bg-primary-500'}`,
                         initial: { width: 0 },
@@ -180,7 +184,7 @@ export const StaffPerformance = () => {
         ),
       }),
       _jsx('div', {
-        className: 'mt-6 pt-4 border-t border-white/10',
+        className: 'mt-6 border-t border-white/10 pt-4',
         children: _jsxs('div', {
           className: 'grid grid-cols-2 gap-4 text-center',
           children: [
@@ -199,7 +203,7 @@ export const StaffPerformance = () => {
             _jsxs('div', {
               children: [
                 _jsx('p', {
-                  className: 'text-2xl font-bold text-accent-400',
+                  className: 'text-accent-400 text-2xl font-bold',
                   children: (
                     (staff?.reduce((sum, s) => sum + s.rating, 0) || 0) /
                     (staff?.length || 1)

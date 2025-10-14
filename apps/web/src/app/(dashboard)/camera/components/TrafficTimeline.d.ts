@@ -8,6 +8,7 @@ interface TimelineData {
 }
 interface TrafficTimelineProps {
   data?: TimelineData[]
+  loading?: boolean
 }
 export declare const TrafficTimeline: React.FC<TrafficTimelineProps>
 export {}

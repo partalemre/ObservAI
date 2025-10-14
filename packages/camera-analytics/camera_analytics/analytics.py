@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 import time
-from collections import defaultdict
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, Optional, Tuple
+from typing import Deque, Dict, Iterable, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -42,6 +42,9 @@ class TrackedPerson:
   inside: bool = False
   age: Optional[float] = None
   gender: str = "unknown"
+  age_history: Deque[float] = field(default_factory=lambda: deque(maxlen=5))
+  gender_history: Deque[str] = field(default_factory=lambda: deque(maxlen=6))
+  gender_confidence: float = 0.5
   active_zones: Dict[str, float] = field(default_factory=dict)
 
   def contains_pixel(self, px: float, py: float) -> bool:
@@ -419,49 +422,133 @@ class CameraAnalyticsEngine:
       json.dump(metrics.to_dict(), handle, indent=2)
 
   def _draw_overlay(self, frame: np.ndarray, frame_w: int, frame_h: int) -> np.ndarray:
-    for person in self.tracks.values():
-      x1, y1, x2, y2 = person.bbox_norm
-      p1 = (int(x1 * frame_w), int(y1 * frame_h))
-      p2 = (int(x2 * frame_w), int(y2 * frame_h))
-      color = (0, 255, 0) if person.inside else (0, 0, 255)
-      cv2.rectangle(frame, p1, p2, color, 2)
-      label = f"ID {person.track_id}"
-      if person.age:
-        label += f" | {int(person.age)}"
-      if person.gender != "unknown":
-        label += f" | {person.gender[0].upper()}"
-      cv2.putText(frame, label, (p1[0], max(20, p1[1] - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+    """Modern, high-quality overlay with glassmorphism UI"""
+    overlay = frame.copy()
 
+    # Draw zones with semi-transparent fill
+    for zone in self.zone_definitions.values():
+      polygon = [(int(x * frame_w), int(y * frame_h)) for x, y in zone.polygon]
+      pts = np.array(polygon, np.int32).reshape((-1, 1, 2))
+
+      # Fill zone with transparent color
+      zone_overlay = overlay.copy()
+      cv2.fillPoly(zone_overlay, [pts], (100, 50, 200))
+      cv2.addWeighted(overlay, 0.9, zone_overlay, 0.1, 0, overlay)
+
+      # Border with glow effect
+      cv2.polylines(overlay, [pts], True, (150, 100, 255), 3, cv2.LINE_AA)
+
+      # Zone label with background
+      label = zone.name or zone.id
+      (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.6, 2)
+      label_pos = (polygon[0][0], polygon[0][1] - 10)
+      cv2.rectangle(overlay,
+                   (label_pos[0] - 5, label_pos[1] - text_h - 5),
+                   (label_pos[0] + text_w + 5, label_pos[1] + 5),
+                   (40, 40, 60), -1)
+      cv2.putText(overlay, label, label_pos, cv2.FONT_HERSHEY_DUPLEX, 0.6, (200, 150, 255), 2, cv2.LINE_AA)
+
+    # Draw entrance line with glow
     if self.config.entrance_line:
       line = self.config.entrance_line
       start = (int(line.start[0] * frame_w), int(line.start[1] * frame_h))
       end = (int(line.end[0] * frame_w), int(line.end[1] * frame_h))
-      cv2.line(frame, start, end, (255, 255, 0), 2)
-      cv2.putText(frame, "Entrance", (start[0], start[1] - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
 
-    for zone in self.zone_definitions.values():
-      polygon = [(int(x * frame_w), int(y * frame_h)) for x, y in zone.polygon]
-      pts = np.array(polygon, np.int32).reshape((-1, 1, 2))
-      cv2.polylines(frame, [pts], True, (255, 0, 0), 2)
-      label = zone.name or zone.id
-      cv2.putText(
-        frame,
-        label,
-        (polygon[0][0], polygon[0][1] - 5),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.5,
-        (255, 0, 0),
-        1,
-      )
+      # Glow effect
+      cv2.line(overlay, start, end, (80, 255, 255), 8, cv2.LINE_AA)
+      cv2.line(overlay, start, end, (0, 240, 240), 4, cv2.LINE_AA)
 
+      # Label with background
+      (text_w, text_h), _ = cv2.getTextSize("ENTRANCE", cv2.FONT_HERSHEY_DUPLEX, 0.7, 2)
+      text_pos = (start[0], start[1] - 15)
+      cv2.rectangle(overlay,
+                   (text_pos[0] - 5, text_pos[1] - text_h - 5),
+                   (text_pos[0] + text_w + 5, text_pos[1] + 5),
+                   (40, 60, 60), -1)
+      cv2.putText(overlay, "ENTRANCE", text_pos, cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 255, 255), 2, cv2.LINE_AA)
+
+    # Draw tracked people with modern boxes
+    for person in self.tracks.values():
+      x1, y1, x2, y2 = person.bbox_norm
+      p1 = (int(x1 * frame_w), int(y1 * frame_h))
+      p2 = (int(x2 * frame_w), int(y2 * frame_h))
+
+      # Color based on status
+      if person.inside:
+        box_color = (0, 255, 150)  # Cyan-green for inside
+        text_color = (0, 255, 200)
+      else:
+        box_color = (100, 100, 255)  # Red-ish for outside
+        text_color = (150, 150, 255)
+
+      # Draw rounded rectangle effect with corners
+      thickness = 3
+      corner_length = 20
+
+      # Top-left corner
+      cv2.line(overlay, p1, (p1[0] + corner_length, p1[1]), box_color, thickness, cv2.LINE_AA)
+      cv2.line(overlay, p1, (p1[0], p1[1] + corner_length), box_color, thickness, cv2.LINE_AA)
+
+      # Top-right corner
+      cv2.line(overlay, (p2[0], p1[1]), (p2[0] - corner_length, p1[1]), box_color, thickness, cv2.LINE_AA)
+      cv2.line(overlay, (p2[0], p1[1]), (p2[0], p1[1] + corner_length), box_color, thickness, cv2.LINE_AA)
+
+      # Bottom-left corner
+      cv2.line(overlay, (p1[0], p2[1]), (p1[0] + corner_length, p2[1]), box_color, thickness, cv2.LINE_AA)
+      cv2.line(overlay, (p1[0], p2[1]), (p1[0], p2[1] - corner_length), box_color, thickness, cv2.LINE_AA)
+
+      # Bottom-right corner
+      cv2.line(overlay, p2, (p2[0] - corner_length, p2[1]), box_color, thickness, cv2.LINE_AA)
+      cv2.line(overlay, p2, (p2[0], p2[1] - corner_length), box_color, thickness, cv2.LINE_AA)
+
+      # Person info
+      info_parts = [f"ID:{person.track_id}"]
+      if person.age:
+        info_parts.append(f"{int(person.age)}y")
+      if person.gender != "unknown":
+        info_parts.append(f"{person.gender[0].upper()}")
+
+      label = " | ".join(info_parts)
+      (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+
+      # Label background with glassmorphism
+      label_bg_p1 = (p1[0], max(5, p1[1] - text_h - 15))
+      label_bg_p2 = (p1[0] + text_w + 10, max(text_h + 10, p1[1] - 5))
+      cv2.rectangle(overlay, label_bg_p1, label_bg_p2, (30, 30, 40), -1)
+      cv2.rectangle(overlay, label_bg_p1, label_bg_p2, box_color, 2, cv2.LINE_AA)
+      cv2.putText(overlay, label, (p1[0] + 5, max(text_h + 5, p1[1] - 10)),
+                 cv2.FONT_HERSHEY_DUPLEX, 0.5, text_color, 1, cv2.LINE_AA)
+
+    # Modern stats panel (top-left)
     metrics = self._build_metrics()
-    overlay_lines = [
-      f"In: {metrics.people_in}",
-      f"Out: {metrics.people_out}",
-      f"Current: {metrics.current}",
-      f"Queue: {metrics.queue.current}",
-    ]
-    for idx, line in enumerate(overlay_lines):
-      cv2.putText(frame, line, (10, 20 + idx * 18), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 200, 255), 2)
+    panel_x, panel_y = 20, 20
+    panel_w, panel_h = 280, 150
 
-    return frame
+    # Glassmorphism background
+    stats_overlay = overlay.copy()
+    cv2.rectangle(stats_overlay, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h),
+                 (30, 30, 40), -1)
+    cv2.addWeighted(overlay, 0.4, stats_overlay, 0.6, 0, overlay)
+
+    # Border with gradient effect
+    cv2.rectangle(overlay, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h),
+                 (100, 200, 255), 3, cv2.LINE_AA)
+
+    # Title
+    cv2.putText(overlay, "ObservAI Analytics", (panel_x + 10, panel_y + 30),
+               cv2.FONT_HERSHEY_DUPLEX, 0.7, (150, 220, 255), 2, cv2.LINE_AA)
+
+    # Stats with icons (using text symbols)
+    stats = [
+      (f"↓ In: {metrics.people_in}", (0, 255, 150)),
+      (f"↑ Out: {metrics.people_out}", (255, 100, 100)),
+      (f"● Current: {metrics.current}", (0, 200, 255)),
+      (f"⏱ Queue: {metrics.queue.current}", (255, 200, 0))
+    ]
+
+    for idx, (stat_text, color) in enumerate(stats):
+      y_pos = panel_y + 60 + idx * 22
+      cv2.putText(overlay, stat_text, (panel_x + 15, y_pos),
+                 cv2.FONT_HERSHEY_DUPLEX, 0.6, color, 2, cv2.LINE_AA)
+
+    return overlay

@@ -6,11 +6,11 @@ export const Stat = ({ label, value, trend = 'neutral', isNumeric = true }) => {
   const getTrendIcon = () => {
     switch (trend) {
       case 'up':
-        return _jsx(TrendingUp, { className: 'w-4 h-4 text-green-400' })
+        return _jsx(TrendingUp, { className: 'h-4 w-4 text-green-400' })
       case 'down':
-        return _jsx(TrendingDown, { className: 'w-4 h-4 text-red-400' })
+        return _jsx(TrendingDown, { className: 'h-4 w-4 text-red-400' })
       default:
-        return _jsx(Minus, { className: 'w-4 h-4 text-white/40' })
+        return _jsx(Minus, { className: 'h-4 w-4 text-white/40' })
     }
   }
   const getTrendColor = () => {
@@ -30,7 +30,7 @@ export const Stat = ({ label, value, trend = 'neutral', isNumeric = true }) => {
     transition: { duration: 0.3 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center justify-center gap-1 mb-1',
+        className: 'mb-1 flex items-center justify-center gap-1',
         children: [
           getTrendIcon(),
           _jsx('div', {

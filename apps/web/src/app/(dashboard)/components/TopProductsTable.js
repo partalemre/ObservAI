@@ -23,7 +23,7 @@ export const TopProductsTable = () => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-4',
+          className: 'mb-4 flex items-center gap-3',
           children: [
             _jsx(Skeleton, { className: 'h-10 w-10 rounded-lg' }),
             _jsx(Skeleton, { className: 'h-6 w-32' }),
@@ -50,18 +50,18 @@ export const TopProductsTable = () => {
   }
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5, delay: 0.3 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center gap-3 mb-6',
+        className: 'mb-6 flex items-center gap-3',
         children: [
           _jsx('div', {
             className:
-              'w-10 h-10 rounded-lg bg-accent-500/20 flex items-center justify-center',
-            children: _jsx(Package, { className: 'w-5 h-5 text-accent-400' }),
+              'bg-accent-500/20 flex h-10 w-10 items-center justify-center rounded-lg',
+            children: _jsx(Package, { className: 'text-accent-400 h-5 w-5' }),
           }),
           _jsxs('div', {
             children: [
@@ -84,7 +84,7 @@ export const TopProductsTable = () => {
             motion.div,
             {
               className:
-                'flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-200 group',
+                'group flex items-center justify-between rounded-lg bg-white/5 p-3 transition-colors duration-200 hover:bg-white/10',
               initial: { opacity: 0, x: -20 },
               animate: { opacity: 1, x: 0 },
               transition: { delay: index * 0.1 },
@@ -95,14 +95,14 @@ export const TopProductsTable = () => {
                   children: [
                     _jsxs('div', {
                       className:
-                        'flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/20 text-primary-400 font-bold text-sm',
+                        'bg-primary-500/20 text-primary-400 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold',
                       children: ['#', index + 1],
                     }),
                     _jsxs('div', {
                       children: [
                         _jsx('p', {
                           className:
-                            'text-white font-medium group-hover:text-primary-300 transition-colors',
+                            'group-hover:text-primary-300 font-medium text-white transition-colors',
                           children: product.name,
                         }),
                         _jsxs('p', {
@@ -117,14 +117,14 @@ export const TopProductsTable = () => {
                   className: 'text-right',
                   children: [
                     _jsx('p', {
-                      className: 'text-white font-semibold',
+                      className: 'font-semibold text-white',
                       children: formatCurrency(product.revenue),
                     }),
                     _jsxs('div', {
                       className:
                         'flex items-center justify-end gap-1 text-sm text-green-400',
                       children: [
-                        _jsx(TrendingUp, { className: 'w-3 h-3' }),
+                        _jsx(TrendingUp, { className: 'h-3 w-3' }),
                         _jsxs('span', {
                           children: [
                             '+',
@@ -146,16 +146,16 @@ export const TopProductsTable = () => {
         ),
       }),
       _jsx('div', {
-        className: 'mt-6 pt-4 border-t border-white/10',
+        className: 'mt-6 border-t border-white/10 pt-4',
         children: _jsxs('div', {
-          className: 'flex justify-between items-center text-sm',
+          className: 'flex items-center justify-between text-sm',
           children: [
             _jsx('span', {
               className: 'text-white/60',
               children: 'Toplam Sat\u0131\u015F',
             }),
             _jsx('span', {
-              className: 'text-white font-semibold',
+              className: 'font-semibold text-white',
               children: formatCurrency(
                 products?.reduce((sum, p) => sum + p.revenue, 0) || 0
               ),

@@ -2,6 +2,8 @@
 
 Cafe-odaklı SaaS: QR Menü, POS entegrasyonu, Envanter, Kamera Analitiği, Kampanya Öneri Motoru.
 
+> 📖 **[COMPLETE_GUIDE.md](./COMPLETE_GUIDE.md)** - Detaylı kurulum ve kullanım kılavuzu (iPhone kamera overlay, live stream desteği, tüm özellikler)
+
 ## Stack
 
 - Frontend: Next.js 14 + TS

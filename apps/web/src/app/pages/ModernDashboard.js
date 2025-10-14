@@ -187,10 +187,10 @@ const ModernDashboard = () => {
   }
   if (isLoading) {
     return _jsx('div', {
-      className: 'min-h-screen bg-gray-50 flex items-center justify-center',
+      className: 'flex min-h-screen items-center justify-center bg-gray-50',
       children: _jsx('div', {
         className:
-          'animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600',
+          'h-32 w-32 animate-spin rounded-full border-b-2 border-indigo-600',
       }),
     })
   }
@@ -198,7 +198,7 @@ const ModernDashboard = () => {
     className: 'min-h-screen bg-gray-50',
     children: [
       _jsx('div', {
-        className: 'bg-white shadow-sm border-b',
+        className: 'border-b bg-white shadow-sm',
         children: _jsx('div', {
           className: 'px-6 py-4',
           children: _jsxs('div', {
@@ -211,7 +211,7 @@ const ModernDashboard = () => {
                     children: 'Dashboard',
                   }),
                   _jsx('p', {
-                    className: 'text-gray-600 text-sm',
+                    className: 'text-sm text-gray-600',
                     children: 'Real-time business analytics',
                   }),
                 ],
@@ -223,7 +223,7 @@ const ModernDashboard = () => {
                     value: selectedStore,
                     onChange: (e) => setSelectedStore(e.target.value),
                     className:
-                      'border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500',
+                      'rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none',
                     children: [
                       _jsx('option', { value: 'vista', children: 'Vista' }),
                       _jsx('option', {
@@ -237,7 +237,7 @@ const ModernDashboard = () => {
                     ],
                   }),
                   _jsx('div', {
-                    className: 'flex bg-gray-100 rounded-lg p-1',
+                    className: 'flex rounded-lg bg-gray-100 p-1',
                     children: ['Today', 'Last 7 days', 'Last 30 days'].map(
                       (period) =>
                         _jsx(
@@ -247,7 +247,7 @@ const ModernDashboard = () => {
                               setSelectedPeriod(
                                 period.toLowerCase().replace(' ', '_')
                               ),
-                            className: `px-4 py-2 text-sm rounded-md transition-colors ${
+                            className: `rounded-md px-4 py-2 text-sm transition-colors ${
                               selectedPeriod ===
                               period.toLowerCase().replace(' ', '_')
                                 ? 'bg-white text-indigo-600 shadow-sm'
@@ -262,8 +262,8 @@ const ModernDashboard = () => {
                   _jsx('button', {
                     onClick: () => refetch(),
                     className:
-                      'p-2 text-gray-400 hover:text-gray-600 transition-colors',
-                    children: _jsx(RefreshCw, { className: 'w-5 h-5' }),
+                      'p-2 text-gray-400 transition-colors hover:text-gray-600',
+                    children: _jsx(RefreshCw, { className: 'h-5 w-5' }),
                   }),
                 ],
               }),
@@ -272,10 +272,10 @@ const ModernDashboard = () => {
         }),
       }),
       _jsxs('div', {
-        className: 'p-6 space-y-6',
+        className: 'space-y-6 p-6',
         children: [
           _jsx('div', {
-            className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
+            className: 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3',
             children: Object.entries(data.metrics).map(([key, metric]) =>
               _jsxs(
                 motion.div,
@@ -283,15 +283,15 @@ const ModernDashboard = () => {
                   initial: { opacity: 0, y: 20 },
                   animate: { opacity: 1, y: 0 },
                   className:
-                    'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                    'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                   children: [
                     _jsx('div', {
-                      className: 'flex items-center justify-between mb-4',
+                      className: 'mb-4 flex items-center justify-between',
                       children: _jsxs('div', {
                         className: 'flex items-center gap-3',
                         children: [
                           _jsxs('div', {
-                            className: `p-2 rounded-lg ${
+                            className: `rounded-lg p-2 ${
                               key === 'adns'
                                 ? 'bg-red-100 text-red-600'
                                 : key === 'cogs'
@@ -304,15 +304,15 @@ const ModernDashboard = () => {
                             }`,
                             children: [
                               key === 'adns' &&
-                                _jsx(DollarSign, { className: 'w-5 h-5' }),
+                                _jsx(DollarSign, { className: 'h-5 w-5' }),
                               key === 'cogs' &&
-                                _jsx(BarChart3, { className: 'w-5 h-5' }),
+                                _jsx(BarChart3, { className: 'h-5 w-5' }),
                               key === 'laborRatio' &&
-                                _jsx(Users, { className: 'w-5 h-5' }),
+                                _jsx(Users, { className: 'h-5 w-5' }),
                               key === 'traffic' &&
-                                _jsx(Activity, { className: 'w-5 h-5' }),
+                                _jsx(Activity, { className: 'h-5 w-5' }),
                               key === 'aov' &&
-                                _jsx(ShoppingBag, { className: 'w-5 h-5' }),
+                                _jsx(ShoppingBag, { className: 'h-5 w-5' }),
                             ],
                           }),
                           _jsx('div', {
@@ -358,10 +358,10 @@ const ModernDashboard = () => {
                                 metric.change !== 0 &&
                                   (metric.change >= 0
                                     ? _jsx(TrendingUp, {
-                                        className: 'w-4 h-4 text-green-600',
+                                        className: 'h-4 w-4 text-green-600',
                                       })
                                     : _jsx(TrendingDown, {
-                                        className: 'w-4 h-4 text-red-600',
+                                        className: 'h-4 w-4 text-red-600',
                                       })),
                               ],
                             }),
@@ -393,16 +393,16 @@ const ModernDashboard = () => {
             ),
           }),
           _jsxs('div', {
-            className: 'grid grid-cols-1 lg:grid-cols-2 gap-6',
+            className: 'grid grid-cols-1 gap-6 lg:grid-cols-2',
             children: [
               _jsxs(motion.div, {
                 initial: { opacity: 0, x: -20 },
                 animate: { opacity: 1, x: 0 },
                 className:
-                  'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                  'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                 children: [
                   _jsx('h3', {
-                    className: 'text-lg font-semibold text-gray-900 mb-4',
+                    className: 'mb-4 text-lg font-semibold text-gray-900',
                     children: 'Sales (Hourly)',
                   }),
                   _jsx('div', {
@@ -418,10 +418,10 @@ const ModernDashboard = () => {
                 initial: { opacity: 0, x: 20 },
                 animate: { opacity: 1, x: 0 },
                 className:
-                  'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                  'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                 children: [
                   _jsx('h3', {
-                    className: 'text-lg font-semibold text-gray-900 mb-4',
+                    className: 'mb-4 text-lg font-semibold text-gray-900',
                     children: 'Category Count Mix',
                   }),
                   _jsx('div', {
@@ -436,17 +436,17 @@ const ModernDashboard = () => {
             ],
           }),
           _jsxs('div', {
-            className: 'grid grid-cols-1 lg:grid-cols-3 gap-6',
+            className: 'grid grid-cols-1 gap-6 lg:grid-cols-3',
             children: [
               _jsxs(motion.div, {
                 initial: { opacity: 0, y: 20 },
                 animate: { opacity: 1, y: 0 },
                 transition: { delay: 0.1 },
                 className:
-                  'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                  'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                 children: [
                   _jsx('h3', {
-                    className: 'text-lg font-semibold text-gray-900 mb-4',
+                    className: 'mb-4 text-lg font-semibold text-gray-900',
                     children: 'Best Sellers',
                   }),
                   _jsxs('div', {
@@ -454,7 +454,7 @@ const ModernDashboard = () => {
                     children: [
                       _jsxs('div', {
                         className:
-                          'grid grid-cols-3 text-sm font-medium text-gray-500 pb-2 border-b',
+                          'grid grid-cols-3 border-b pb-2 text-sm font-medium text-gray-500',
                         children: [
                           _jsx('span', { children: 'Rank' }),
                           _jsx('span', { children: 'Item' }),
@@ -465,12 +465,12 @@ const ModernDashboard = () => {
                         _jsxs(
                           'div',
                           {
-                            className: 'grid grid-cols-3 text-sm items-center',
+                            className: 'grid grid-cols-3 items-center text-sm',
                             children: [
                               _jsx('div', {
                                 className: 'flex items-center',
                                 children: _jsx('span', {
-                                  className: `w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                                  className: `flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
                                     item.rank === 1
                                       ? 'bg-yellow-100 text-yellow-800'
                                       : item.rank === 2
@@ -483,7 +483,7 @@ const ModernDashboard = () => {
                                 }),
                               }),
                               _jsx('span', {
-                                className: 'text-gray-900 truncate',
+                                className: 'truncate text-gray-900',
                                 children: item.item,
                               }),
                               _jsxs('span', {
@@ -504,10 +504,10 @@ const ModernDashboard = () => {
                 animate: { opacity: 1, y: 0 },
                 transition: { delay: 0.2 },
                 className:
-                  'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                  'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                 children: [
                   _jsx('h3', {
-                    className: 'text-lg font-semibold text-gray-900 mb-4',
+                    className: 'mb-4 text-lg font-semibold text-gray-900',
                     children: "What's Trending?",
                   }),
                   _jsxs('div', {
@@ -515,7 +515,7 @@ const ModernDashboard = () => {
                     children: [
                       _jsxs('div', {
                         className:
-                          'grid grid-cols-4 text-sm font-medium text-gray-500 pb-2 border-b',
+                          'grid grid-cols-4 border-b pb-2 text-sm font-medium text-gray-500',
                         children: [
                           _jsx('span', { children: 'Rank' }),
                           _jsx('span', { children: 'Item' }),
@@ -527,12 +527,12 @@ const ModernDashboard = () => {
                         _jsxs(
                           'div',
                           {
-                            className: 'grid grid-cols-4 text-sm items-center',
+                            className: 'grid grid-cols-4 items-center text-sm',
                             children: [
                               _jsx('div', {
                                 className: 'flex items-center',
                                 children: _jsx('span', {
-                                  className: `w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                                  className: `flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium ${
                                     item.rank === 1
                                       ? 'bg-green-100 text-green-800'
                                       : item.rank === 2
@@ -545,7 +545,7 @@ const ModernDashboard = () => {
                                 }),
                               }),
                               _jsx('span', {
-                                className: 'text-gray-900 truncate text-xs',
+                                className: 'truncate text-xs text-gray-900',
                                 children: item.item,
                               }),
                               _jsx('span', {
@@ -570,10 +570,10 @@ const ModernDashboard = () => {
                 animate: { opacity: 1, y: 0 },
                 transition: { delay: 0.3 },
                 className:
-                  'bg-white rounded-xl p-6 shadow-sm border border-gray-200',
+                  'rounded-xl border border-gray-200 bg-white p-6 shadow-sm',
                 children: [
                   _jsx('h3', {
-                    className: 'text-lg font-semibold text-gray-900 mb-4',
+                    className: 'mb-4 text-lg font-semibold text-gray-900',
                     children: 'Performance Summary',
                   }),
                   _jsxs('div', {
@@ -581,13 +581,13 @@ const ModernDashboard = () => {
                     children: [
                       _jsxs('div', {
                         className:
-                          'flex items-center justify-between p-3 bg-green-50 rounded-lg',
+                          'flex items-center justify-between rounded-lg bg-green-50 p-3',
                         children: [
                           _jsxs('div', {
                             className: 'flex items-center gap-2',
                             children: [
                               _jsx(TrendingUp, {
-                                className: 'w-4 h-4 text-green-600',
+                                className: 'h-4 w-4 text-green-600',
                               }),
                               _jsx('span', {
                                 className: 'text-sm text-green-800',
@@ -603,13 +603,13 @@ const ModernDashboard = () => {
                       }),
                       _jsxs('div', {
                         className:
-                          'flex items-center justify-between p-3 bg-blue-50 rounded-lg',
+                          'flex items-center justify-between rounded-lg bg-blue-50 p-3',
                         children: [
                           _jsxs('div', {
                             className: 'flex items-center gap-2',
                             children: [
                               _jsx(Users, {
-                                className: 'w-4 h-4 text-blue-600',
+                                className: 'h-4 w-4 text-blue-600',
                               }),
                               _jsx('span', {
                                 className: 'text-sm text-blue-800',
@@ -625,13 +625,13 @@ const ModernDashboard = () => {
                       }),
                       _jsxs('div', {
                         className:
-                          'flex items-center justify-between p-3 bg-purple-50 rounded-lg',
+                          'flex items-center justify-between rounded-lg bg-purple-50 p-3',
                         children: [
                           _jsxs('div', {
                             className: 'flex items-center gap-2',
                             children: [
                               _jsx(Clock, {
-                                className: 'w-4 h-4 text-purple-600',
+                                className: 'h-4 w-4 text-purple-600',
                               }),
                               _jsx('span', {
                                 className: 'text-sm text-purple-800',
@@ -647,13 +647,13 @@ const ModernDashboard = () => {
                       }),
                       _jsxs('div', {
                         className:
-                          'flex items-center justify-between p-3 bg-orange-50 rounded-lg',
+                          'flex items-center justify-between rounded-lg bg-orange-50 p-3',
                         children: [
                           _jsxs('div', {
                             className: 'flex items-center gap-2',
                             children: [
                               _jsx(Activity, {
-                                className: 'w-4 h-4 text-orange-600',
+                                className: 'h-4 w-4 text-orange-600',
                               }),
                               _jsx('span', {
                                 className: 'text-sm text-orange-800',

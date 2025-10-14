@@ -22,7 +22,7 @@ export const Logo = ({ collapsed }) => {
             }),
             _jsx('div', {
               className:
-                'absolute inset-0 bg-primary-500/20 blur-xl rounded-full scale-150 -z-10',
+                'bg-primary-500/20 absolute inset-0 -z-10 scale-150 rounded-full blur-xl',
             }),
           ],
         })
@@ -44,7 +44,7 @@ export const Logo = ({ collapsed }) => {
                 }),
                 _jsx('div', {
                   className:
-                    'absolute inset-0 bg-primary-500/20 blur-xl rounded-full scale-150 -z-10',
+                    'bg-primary-500/20 absolute inset-0 -z-10 scale-150 rounded-full blur-xl',
                 }),
               ],
             }),
@@ -56,11 +56,11 @@ export const Logo = ({ collapsed }) => {
               className: 'flex flex-col',
               children: [
                 _jsx('span', {
-                  className: 'font-display font-bold text-lg text-white',
+                  className: 'font-display text-lg font-bold text-white',
                   children: 'ObservAI',
                 }),
                 _jsx('span', {
-                  className: 'text-xs text-white/60 -mt-1',
+                  className: '-mt-1 text-xs text-white/60',
                   children: 'Restaurant Analytics',
                 }),
               ],

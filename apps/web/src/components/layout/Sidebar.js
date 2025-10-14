@@ -49,15 +49,15 @@ const Sidebar = () => {
     animate: { width: collapsed ? 60 : 240 },
     transition: { duration: 0.3, ease: 'easeInOut' },
     className:
-      'h-screen bg-dark-800 border-r border-white/5 flex flex-col glass-card',
+      'bg-dark-800 glass-card flex h-screen flex-col border-r border-white/5',
     children: [
       _jsx('div', {
         className:
-          'h-16 flex items-center justify-center border-b border-white/5 px-4',
+          'flex h-16 items-center justify-center border-b border-white/5 px-4',
         children: _jsx(Logo, { collapsed: collapsed }),
       }),
       _jsx('nav', {
-        className: 'flex-1 p-4 space-y-2',
+        className: 'flex-1 space-y-2 p-4',
         children: menuItems.map((item) =>
           _jsx(
             NavItem,
@@ -74,14 +74,14 @@ const Sidebar = () => {
       _jsx(motion.button, {
         onClick: () => setCollapsed(!collapsed),
         className:
-          'p-4 border-t border-white/5 flex items-center justify-center glass-button text-white/70 hover:text-white transition-colors duration-200',
+          'glass-button flex items-center justify-center border-t border-white/5 p-4 text-white/70 transition-colors duration-200 hover:text-white',
         whileHover: { scale: 1.05 },
         whileTap: { scale: 0.95 },
         children: collapsed
-          ? _jsx(ChevronRight, { className: 'w-5 h-5' })
+          ? _jsx(ChevronRight, { className: 'h-5 w-5' })
           : _jsxs(_Fragment, {
               children: [
-                _jsx(ChevronLeft, { className: 'w-5 h-5 mr-2' }),
+                _jsx(ChevronLeft, { className: 'mr-2 h-5 w-5' }),
                 !collapsed &&
                   _jsx('span', { className: 'text-sm', children: 'Collapse' }),
               ],

@@ -164,12 +164,12 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center gap-3 mb-6',
+          className: 'mb-6 flex items-center gap-3',
           children: [
             _jsx(Skeleton, { className: 'h-10 w-10 rounded-lg' }),
             _jsxs('div', {
               children: [
-                _jsx(Skeleton, { className: 'h-6 w-40 mb-2' }),
+                _jsx(Skeleton, { className: 'mb-2 h-6 w-40' }),
                 _jsx(Skeleton, { className: 'h-4 w-32' }),
               ],
             }),
@@ -181,22 +181,22 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
   }
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center justify-between mb-6',
+        className: 'mb-6 flex items-center justify-between',
         children: [
           _jsxs('div', {
             className: 'flex items-center gap-3',
             children: [
               _jsx('div', {
                 className:
-                  'w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center',
+                  'flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20',
                 children: _jsx(Thermometer, {
-                  className: 'w-5 h-5 text-orange-400',
+                  className: 'h-5 w-5 text-orange-400',
                 }),
               }),
               _jsxs('div', {
@@ -216,9 +216,9 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
           }),
           _jsxs('div', {
             className:
-              'flex items-center gap-2 text-xs text-white/60 bg-white/10 px-3 py-1 rounded-full',
+              'flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-white/60',
             children: [
-              _jsx(MapPin, { className: 'w-3 h-3' }),
+              _jsx(MapPin, { className: 'h-3 w-3' }),
               _jsxs('span', { children: [data?.length || 0, ' Zone'] }),
             ],
           }),
@@ -237,12 +237,12 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
               })
             : _jsx('div', {
                 className:
-                  'h-80 flex items-center justify-center bg-white/5 rounded-lg',
+                  'flex h-80 items-center justify-center rounded-lg bg-white/5',
                 children: _jsxs('div', {
                   className: 'text-center',
                   children: [
                     _jsx(MapPin, {
-                      className: 'w-12 h-12 text-white/30 mx-auto mb-4',
+                      className: 'mx-auto mb-4 h-12 w-12 text-white/30',
                     }),
                     _jsx('p', {
                       className: 'text-white/60',
@@ -253,10 +253,10 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
               }),
           floorPlan &&
             _jsx('div', {
-              className: 'absolute inset-0 pointer-events-none opacity-20',
+              className: 'pointer-events-none absolute inset-0 opacity-20',
               children: _jsx('div', {
                 className:
-                  'w-full h-full bg-gradient-to-br from-white/5 to-transparent rounded-lg border border-white/10',
+                  'h-full w-full rounded-lg border border-white/10 bg-gradient-to-br from-white/5 to-transparent',
               }),
             }),
         ],
@@ -264,9 +264,9 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
       data &&
         data.length > 0 &&
         _jsx('div', {
-          className: 'mt-6 pt-4 border-t border-white/10',
+          className: 'mt-6 border-t border-white/10 pt-4',
           children: _jsx('div', {
-            className: 'grid grid-cols-2 lg:grid-cols-3 gap-3',
+            className: 'grid grid-cols-2 gap-3 lg:grid-cols-3',
             children: data
               .sort((a, b) => b.intensity - a.intensity)
               .slice(0, 6)
@@ -275,17 +275,17 @@ export const HeatMapVisualization = ({ data, floorPlan, loading = false }) => {
                 return _jsxs(
                   motion.div,
                   {
-                    className: `p-3 rounded-lg ${bg} border border-white/10`,
+                    className: `rounded-lg p-3 ${bg} border border-white/10`,
                     initial: { opacity: 0, scale: 0.9 },
                     animate: { opacity: 1, scale: 1 },
                     transition: { delay: index * 0.1 },
                     children: [
                       _jsxs('div', {
-                        className: 'flex items-center justify-between mb-1',
+                        className: 'mb-1 flex items-center justify-between',
                         children: [
                           _jsx('span', {
                             className:
-                              'text-xs font-medium text-white/90 truncate',
+                              'truncate text-xs font-medium text-white/90',
                             children: zone.zone,
                           }),
                           _jsx('span', {

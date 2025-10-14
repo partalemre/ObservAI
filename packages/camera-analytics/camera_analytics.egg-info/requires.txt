@@ -1,11 +1,16 @@
 numpy>=1.23
 opencv-python>=4.8.0
 ultralytics>=8.1.0
-insightface>=0.7.3
-onnxruntime>=1.16.0
 pyyaml>=6.0
 shapely>=2.0
 lapx>=0.5.2
+aiohttp>=3.9.1
+python-socketio[asyncio]>=5.11.0
+urllib3<2.0.0
+
+[demographics]
+insightface>=0.7.3
+onnxruntime>=1.16.0
 
 [dev]
 black>=23.3.0

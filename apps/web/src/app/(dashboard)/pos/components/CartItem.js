@@ -12,7 +12,7 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     }
   }
   return _jsx(motion.div, {
-    className: 'bg-white/5 rounded-lg p-3 mb-3 border border-white/10',
+    className: 'mb-3 rounded-lg border border-white/10 bg-white/5 p-3',
     layout: true,
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
@@ -22,15 +22,15 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
       children: [
         _jsx('div', {
           className:
-            'w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg overflow-hidden flex-shrink-0',
+            'h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gradient-to-br from-gray-700 to-gray-800',
           children: item.image
             ? _jsx('img', {
                 src: item.image,
                 alt: item.name,
-                className: 'w-full h-full object-cover',
+                className: 'h-full w-full object-cover',
               })
             : _jsx('div', {
-                className: 'w-full h-full flex items-center justify-center',
+                className: 'flex h-full w-full items-center justify-center',
                 children: _jsx('span', {
                   className: 'text-primary-400 text-sm font-bold',
                   children: item.name.charAt(0),
@@ -38,14 +38,14 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
               }),
         }),
         _jsxs('div', {
-          className: 'flex-1 min-w-0',
+          className: 'min-w-0 flex-1',
           children: [
             _jsx('h4', {
-              className: 'text-white text-sm font-medium line-clamp-1',
+              className: 'line-clamp-1 text-sm font-medium text-white',
               children: item.name,
             }),
             _jsxs('div', {
-              className: 'flex items-center justify-between mt-1',
+              className: 'mt-1 flex items-center justify-between',
               children: [
                 _jsx('span', {
                   className: 'text-primary-300 text-sm font-semibold',
@@ -57,25 +57,25 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
                     _jsx(motion.button, {
                       onClick: () => handleQuantityChange(-1),
                       className:
-                        'w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors',
+                        'flex h-6 w-6 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20',
                       whileHover: { scale: 1.1 },
                       whileTap: { scale: 0.9 },
                       children: _jsx(Minus, {
-                        className: 'w-3 h-3 text-white',
+                        className: 'h-3 w-3 text-white',
                       }),
                     }),
                     _jsx('span', {
                       className:
-                        'text-white text-sm font-medium min-w-[1.5rem] text-center',
+                        'min-w-[1.5rem] text-center text-sm font-medium text-white',
                       children: item.quantity,
                     }),
                     _jsx(motion.button, {
                       onClick: () => handleQuantityChange(1),
                       className:
-                        'w-6 h-6 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors',
+                        'flex h-6 w-6 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20',
                       whileHover: { scale: 1.1 },
                       whileTap: { scale: 0.9 },
-                      children: _jsx(Plus, { className: 'w-3 h-3 text-white' }),
+                      children: _jsx(Plus, { className: 'h-3 w-3 text-white' }),
                     }),
                   ],
                 }),
@@ -83,14 +83,14 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
             }),
             item.notes &&
               _jsx('p', {
-                className: 'text-gray-400 text-xs mt-1 line-clamp-2',
+                className: 'mt-1 line-clamp-2 text-xs text-gray-400',
                 children: item.notes,
               }),
             _jsxs('div', {
-              className: 'flex items-center justify-between mt-2',
+              className: 'mt-2 flex items-center justify-between',
               children: [
                 _jsxs('span', {
-                  className: 'text-gray-400 text-xs',
+                  className: 'text-xs text-gray-400',
                   children: [
                     'Toplam: ',
                     formatCurrency(item.price * item.quantity),
@@ -99,10 +99,10 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
                 _jsx(motion.button, {
                   onClick: () => onRemove?.(item.id),
                   className:
-                    'text-red-400 hover:text-red-300 transition-colors',
+                    'text-red-400 transition-colors hover:text-red-300',
                   whileHover: { scale: 1.1 },
                   whileTap: { scale: 0.9 },
-                  children: _jsx(Trash2, { className: 'w-4 h-4' }),
+                  children: _jsx(Trash2, { className: 'h-4 w-4' }),
                 }),
               ],
             }),

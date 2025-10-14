@@ -24,7 +24,7 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
           _jsxs('div', {
             className: 'flex items-center gap-2',
             children: [
-              _jsx(Receipt, { className: 'w-4 h-4 text-gray-400' }),
+              _jsx(Receipt, { className: 'h-4 w-4 text-gray-400' }),
               _jsx('span', {
                 className: 'text-gray-400',
                 children: '\u00DCr\u00FCn Say\u0131s\u0131',
@@ -32,7 +32,7 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
             ],
           }),
           _jsxs('span', {
-            className: 'text-white font-medium',
+            className: 'font-medium text-white',
             children: [itemCount, ' adet'],
           }),
         ],
@@ -42,7 +42,7 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
         children: [
           _jsx('span', { className: 'text-gray-400', children: 'Ara Toplam' }),
           _jsx('span', {
-            className: 'text-white font-medium',
+            className: 'font-medium text-white',
             children: formatCurrency(subtotal),
           }),
         ],
@@ -54,7 +54,7 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
             _jsxs('div', {
               className: 'flex items-center gap-2',
               children: [
-                _jsx(Percent, { className: 'w-4 h-4 text-green-400' }),
+                _jsx(Percent, { className: 'h-4 w-4 text-green-400' }),
                 _jsxs('span', {
                   className: 'text-green-400',
                   children: ['\u0130ndirim (%', discount, ')'],
@@ -62,7 +62,7 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
               ],
             }),
             _jsxs('span', {
-              className: 'text-green-400 font-medium',
+              className: 'font-medium text-green-400',
               children: ['-', formatCurrency(discountAmount)],
             }),
           ],
@@ -75,12 +75,12 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
             children: ['KDV (%', (tax * 100).toFixed(0), ')'],
           }),
           _jsx('span', {
-            className: 'text-white font-medium',
+            className: 'font-medium text-white',
             children: formatCurrency(taxAmount),
           }),
         ],
       }),
-      _jsx('div', { className: 'border-t border-white/10 my-3' }),
+      _jsx('div', { className: 'my-3 border-t border-white/10' }),
       _jsxs('div', {
         className: 'flex items-center justify-between',
         children: [
@@ -89,75 +89,75 @@ export const CartSummary = ({ cart, discount = 0, tax = 0.18 }) => {
             children: 'Toplam',
           }),
           _jsx('span', {
-            className: 'text-xl font-bold text-primary-300',
+            className: 'text-primary-300 text-xl font-bold',
             children: formatCurrency(total),
           }),
         ],
       }),
       _jsxs('div', {
-        className: 'flex gap-2 mt-4',
+        className: 'mt-4 flex gap-2',
         children: [
           _jsxs(motion.button, {
             className:
-              'flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-2',
+              'flex flex-1 items-center justify-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-white/10 hover:text-white',
             whileHover: { scale: 1.02 },
             whileTap: { scale: 0.98 },
-            children: [_jsx(Percent, { className: 'w-3 h-3' }), '\u0130ndirim'],
+            children: [_jsx(Percent, { className: 'h-3 w-3' }), '\u0130ndirim'],
           }),
           _jsxs(motion.button, {
             className:
-              'flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-lg text-xs text-gray-400 hover:text-white transition-colors flex items-center justify-center gap-2',
+              'flex flex-1 items-center justify-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs text-gray-400 transition-colors hover:bg-white/10 hover:text-white',
             whileHover: { scale: 1.02 },
             whileTap: { scale: 0.98 },
-            children: [_jsx(Gift, { className: 'w-3 h-3' }), 'Kupon'],
+            children: [_jsx(Gift, { className: 'h-3 w-3' }), 'Kupon'],
           }),
         ],
       }),
       _jsxs('div', {
-        className: 'mt-4 p-3 bg-white/5 rounded-lg',
+        className: 'mt-4 rounded-lg bg-white/5 p-3',
         children: [
           _jsx('div', {
-            className: 'text-xs text-gray-400 mb-2',
+            className: 'mb-2 text-xs text-gray-400',
             children: '\u00D6deme Se\u00E7enekleri',
           }),
           _jsxs('div', {
             className: 'flex gap-2',
             children: [
               _jsxs('div', {
-                className: 'flex-1 p-2 bg-white/10 rounded text-center',
+                className: 'flex-1 rounded bg-white/10 p-2 text-center',
                 children: [
                   _jsx('div', {
-                    className: 'text-xs text-white font-medium',
+                    className: 'text-xs font-medium text-white',
                     children: '\uD83D\uDCB3',
                   }),
                   _jsx('div', {
-                    className: 'text-xs text-gray-400 mt-1',
+                    className: 'mt-1 text-xs text-gray-400',
                     children: 'Kart',
                   }),
                 ],
               }),
               _jsxs('div', {
-                className: 'flex-1 p-2 bg-white/10 rounded text-center',
+                className: 'flex-1 rounded bg-white/10 p-2 text-center',
                 children: [
                   _jsx('div', {
-                    className: 'text-xs text-white font-medium',
+                    className: 'text-xs font-medium text-white',
                     children: '\uD83D\uDCB5',
                   }),
                   _jsx('div', {
-                    className: 'text-xs text-gray-400 mt-1',
+                    className: 'mt-1 text-xs text-gray-400',
                     children: 'Nakit',
                   }),
                 ],
               }),
               _jsxs('div', {
-                className: 'flex-1 p-2 bg-white/10 rounded text-center',
+                className: 'flex-1 rounded bg-white/10 p-2 text-center',
                 children: [
                   _jsx('div', {
-                    className: 'text-xs text-white font-medium',
+                    className: 'text-xs font-medium text-white',
                     children: '\uD83D\uDCF1',
                   }),
                   _jsx('div', {
-                    className: 'text-xs text-gray-400 mt-1',
+                    className: 'mt-1 text-xs text-gray-400',
                     children: 'Dijital',
                   }),
                 ],

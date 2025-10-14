@@ -127,7 +127,7 @@ export const HeatMapChart = ({ data, loading }) => {
       className: 'glass-card rounded-xl p-6',
       children: [
         _jsxs('div', {
-          className: 'flex items-center justify-between mb-4',
+          className: 'mb-4 flex items-center justify-between',
           children: [
             _jsx(Skeleton, { className: 'h-6 w-40' }),
             _jsx(Skeleton, { className: 'h-4 w-20' }),
@@ -139,13 +139,13 @@ export const HeatMapChart = ({ data, loading }) => {
   }
   return _jsxs(motion.div, {
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300',
+      'glass-card rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.5, delay: 0.2 },
     children: [
       _jsxs('div', {
-        className: 'flex items-center justify-between mb-4',
+        className: 'mb-4 flex items-center justify-between',
         children: [
           _jsx('h3', {
             className: 'text-lg font-semibold text-white',
@@ -153,7 +153,7 @@ export const HeatMapChart = ({ data, loading }) => {
           }),
           _jsx('span', {
             className:
-              'text-xs text-white/60 px-2 py-1 bg-white/10 rounded-full',
+              'rounded-full bg-white/10 px-2 py-1 text-xs text-white/60',
             children: 'Anl\u0131k',
           }),
         ],
@@ -167,13 +167,13 @@ export const HeatMapChart = ({ data, loading }) => {
             lazyUpdate: true,
           })
         : _jsx('div', {
-            className: 'h-64 flex items-center justify-center text-white/60',
+            className: 'flex h-64 items-center justify-center text-white/60',
             children: _jsxs('div', {
               className: 'text-center',
               children: [
                 _jsx('div', {
                   className:
-                    'w-16 h-16 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center',
+                    'mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/10',
                   children: _jsx('span', {
                     className: 'text-2xl',
                     children: '\uD83D\uDCCD',

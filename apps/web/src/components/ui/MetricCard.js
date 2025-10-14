@@ -77,10 +77,10 @@ const MetricCard = ({ title, value, change, data, type = 'number', icon }) => {
     whileHover: { scale: 1.02 },
     transition: { duration: 0.3 },
     className:
-      'glass-card rounded-xl p-6 hover:border-white/20 transition-all duration-300 group',
+      'glass-card group rounded-xl p-6 transition-all duration-300 hover:border-white/20',
     children: [
       _jsxs('div', {
-        className: 'flex items-start justify-between mb-4',
+        className: 'mb-4 flex items-start justify-between',
         children: [
           _jsxs('div', {
             className: 'flex items-center gap-3',
@@ -88,24 +88,24 @@ const MetricCard = ({ title, value, change, data, type = 'number', icon }) => {
               icon &&
                 _jsx(motion.div, {
                   className:
-                    'w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/30 transition-colors duration-300',
+                    'bg-primary-500/20 text-primary-400 group-hover:bg-primary-500/30 flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300',
                   whileHover: { scale: 1.1 },
                   children: icon,
                 }),
               _jsx('h3', {
-                className: 'text-white/70 text-sm font-medium',
+                className: 'text-sm font-medium text-white/70',
                 children: title,
               }),
             ],
           }),
           change !== undefined &&
             _jsxs(motion.span, {
-              className: `text-xs px-2 py-1 rounded-full font-medium transition-colors duration-300 ${
+              className: `rounded-full px-2 py-1 text-xs font-medium transition-colors duration-300 ${
                 change > 0
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                  ? 'border border-green-500/30 bg-green-500/20 text-green-400'
                   : change < 0
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                    ? 'border border-red-500/30 bg-red-500/20 text-red-400'
+                    : 'border border-gray-500/30 bg-gray-500/20 text-gray-400'
               }`,
               initial: { opacity: 0, scale: 0.8 },
               animate: { opacity: 1, scale: 1 },
@@ -125,7 +125,7 @@ const MetricCard = ({ title, value, change, data, type = 'number', icon }) => {
               end: value,
               duration: 1.5,
               formattingFn: formatValue,
-              className: 'text-2xl font-bold text-white animate-number-up',
+              className: 'animate-number-up text-2xl font-bold text-white',
               useEasing: true,
               easingFn: (t, b, c, d) => {
                 // easeOutCubic
@@ -135,7 +135,7 @@ const MetricCard = ({ title, value, change, data, type = 'number', icon }) => {
           }),
           chartOption &&
             _jsx(motion.div, {
-              className: 'w-20 h-12',
+              className: 'h-12 w-20',
               initial: { opacity: 0, scale: 0.8 },
               animate: { opacity: 1, scale: 1 },
               transition: { delay: 0.3, duration: 0.5 },
@@ -151,7 +151,7 @@ const MetricCard = ({ title, value, change, data, type = 'number', icon }) => {
       }),
       _jsx('div', {
         className:
-          'absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none',
+          'from-primary-500/5 pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-br to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100',
       }),
     ],
   })

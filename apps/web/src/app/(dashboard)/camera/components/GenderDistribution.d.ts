@@ -6,6 +6,7 @@ interface GenderData {
 }
 interface GenderDistributionProps {
   data?: GenderData
+  loading?: boolean
 }
 export declare const GenderDistribution: React.FC<GenderDistributionProps>
 export {}
