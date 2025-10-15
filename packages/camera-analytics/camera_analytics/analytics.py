@@ -562,38 +562,91 @@ class CameraAnalyticsEngine:
       p2 = (int(x2 * frame_w), int(y2 * frame_h))
       color = (0, 255, 0) if person.inside else (0, 0, 255)
 
-      # Draw bounding box
-      cv2.rectangle(frame, p1, p2, color, 2)
+      # Draw modern bounding box with rounded corners effect
+      thickness = 3 if person.inside else 2
 
-      # Create label with age category
-      label = f"ID {person.track_id}"
-      if person.age:
-        age_category = bucket_for_age(person.age)
-        category_display = {
-          "child": "Child (0-12)",
-          "teen": "Teen (13-19)",
-          "adult": "Adult (20-59)",
-          "senior": "Senior (60+)"
-        }.get(age_category, "Unknown")
-        label += f" | {category_display}"
+      # Main box
+      cv2.rectangle(frame, p1, p2, color, thickness)
+
+      # Corner accents (modern look)
+      corner_length = 20
+      corner_thickness = 4
+
+      # Top-left corner
+      cv2.line(frame, p1, (p1[0] + corner_length, p1[1]), color, corner_thickness)
+      cv2.line(frame, p1, (p1[0], p1[1] + corner_length), color, corner_thickness)
+
+      # Top-right corner
+      cv2.line(frame, (p2[0], p1[1]), (p2[0] - corner_length, p1[1]), color, corner_thickness)
+      cv2.line(frame, (p2[0], p1[1]), (p2[0], p1[1] + corner_length), color, corner_thickness)
+
+      # Bottom-left corner
+      cv2.line(frame, (p1[0], p2[1]), (p1[0] + corner_length, p2[1]), color, corner_thickness)
+      cv2.line(frame, (p1[0], p2[1]), (p1[0], p2[1] - corner_length), color, corner_thickness)
+
+      # Bottom-right corner
+      cv2.line(frame, p2, (p2[0] - corner_length, p2[1]), color, corner_thickness)
+      cv2.line(frame, p2, (p2[0], p2[1] - corner_length), color, corner_thickness)
+
+      # Create modern label with demographics
+      labels = []
+
+      # Track ID (always show)
+      labels.append(f"#{person.track_id}")
+
+      # Gender (with emoji)
       if person.gender != "unknown":
-        gender_display = "M" if person.gender == "male" else "F"
-        label += f" | {gender_display}"
+        gender_emoji = "♂" if person.gender == "male" else "♀"
+        gender_display = "Male" if person.gender == "male" else "Female"
+        labels.append(f"{gender_emoji} {gender_display}")
 
-      # Draw label with background
+      # Age (show actual age if available)
+      if person.age:
+        labels.append(f"Age: {person.age}")
+        age_category = bucket_for_age(person.age)
+        category_emoji = {
+          "child": "👶",
+          "teen": "🧒",
+          "adult": "👤",
+          "senior": "👴"
+        }.get(age_category, "❓")
+        labels.append(category_emoji)
+
+      # Dwell time
+      dwell = time.time() - person.first_seen
+      if dwell < 60:
+        labels.append(f"⏱ {int(dwell)}s")
+      else:
+        labels.append(f"⏱ {int(dwell/60)}m {int(dwell%60)}s")
+
+      label = " | ".join(labels)
+
+      # Draw modern label with background
       font = cv2.FONT_HERSHEY_SIMPLEX
-      font_scale = 0.5
-      thickness = 1
-      (text_w, text_h), baseline = cv2.getTextSize(label, font, font_scale, thickness)
+      font_scale = 0.6
+      text_thickness = 2
+      (text_w, text_h), baseline = cv2.getTextSize(label, font, font_scale, text_thickness)
 
-      # Glass background for label
-      label_y = max(20, p1[1] - 10)
-      cv2.rectangle(overlay,
-                   (p1[0], label_y - text_h - 5),
-                   (p1[0] + text_w + 10, label_y + 5),
-                   (0, 0, 0), -1)
+      # Modern glass background for label
+      label_y = max(text_h + 15, p1[1] - 10)
+      padding = 8
 
-      cv2.putText(frame, label, (p1[0] + 5, label_y), font, font_scale, color, thickness)
+      # Draw semi-transparent background
+      bg_overlay = frame.copy()
+      cv2.rectangle(bg_overlay,
+                   (p1[0] - padding, label_y - text_h - padding),
+                   (p1[0] + text_w + padding, label_y + padding),
+                   (20, 20, 40), -1)
+      cv2.addWeighted(bg_overlay, 0.7, frame, 0.3, 0, frame)
+
+      # Draw border
+      cv2.rectangle(frame,
+                   (p1[0] - padding, label_y - text_h - padding),
+                   (p1[0] + text_w + padding, label_y + padding),
+                   color, 2)
+
+      # Draw text
+      cv2.putText(frame, label, (p1[0], label_y), font, font_scale, (255, 255, 255), text_thickness)
 
     # Only show zones if explicitly requested (for testing/setup)
     if self.show_zones:

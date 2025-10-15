@@ -1,5 +1,5 @@
 {
-  "ts": "2025-10-15T14:13:31.000650",
+  "ts": "2025-10-15T15:00:57.558542",
   "peopleIn": 0,
   "peopleOut": 0,
   "current": 1,
@@ -17,8 +17,8 @@
   },
   "queue": {
     "current": 1,
-    "averageWaitSeconds": 3.5,
-    "longestWaitSeconds": 3.5
+    "averageWaitSeconds": 22.8,
+    "longestWaitSeconds": 22.8
   },
   "tables": [
     {
@@ -56,15 +56,15 @@
       0,
       0,
       0,
-      0,
+      1,
       0,
       0
     ],
     [
       0,
       0,
-      40,
-      0,
+      922,
+      12,
       0,
       0
     ],
@@ -83,9 +83,9 @@
       "age": null,
       "ageBucket": "unknown",
       "gender": "unknown",
-      "dwellSeconds": 49.0
+      "dwellSeconds": 59.9
     }
   ],
-  "fps": 30.0,
-  "avgDwellTime": 49.0
+  "fps": 20.0,
+  "avgDwellTime": 59.9
 }
