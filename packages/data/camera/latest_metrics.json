@@ -1,24 +1,24 @@
 {
-  "ts": "2025-10-14T15:59:38.835616",
+  "ts": "2025-10-15T14:13:31.000650",
   "peopleIn": 0,
   "peopleOut": 0,
-  "current": 3,
+  "current": 1,
   "ageBuckets": {
     "child": 0,
     "young": 0,
-    "middleage": 0,
-    "old": 0,
-    "elderly": 0
+    "adult": 0,
+    "mature": 0,
+    "senior": 0
   },
   "gender": {
     "male": 0,
     "female": 0,
-    "unknown": 3
+    "unknown": 1
   },
   "queue": {
-    "current": 2,
-    "averageWaitSeconds": 7.2,
-    "longestWaitSeconds": 34.0
+    "current": 1,
+    "averageWaitSeconds": 3.5,
+    "longestWaitSeconds": 3.5
   },
   "tables": [
     {
@@ -62,22 +62,30 @@
     ],
     [
       0,
-      18,
-      267,
-      832,
+      0,
+      40,
+      0,
       0,
       0
     ],
     [
       0,
-      956,
-      24,
+      0,
+      0,
       0,
       0,
       0
     ]
   ],
-  "activePeople": [],
-  "fps": 22.4,
-  "avgDwellTime": 10.1
+  "activePeople": [
+    {
+      "id": 1,
+      "age": null,
+      "ageBucket": "unknown",
+      "gender": "unknown",
+      "dwellSeconds": 49.0
+    }
+  ],
+  "fps": 30.0,
+  "avgDwellTime": 49.0
 }
