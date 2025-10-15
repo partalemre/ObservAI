@@ -6,32 +6,30 @@ from typing import Dict, List, Optional
 
 
 def default_age_buckets() -> Dict[str, int]:
-  return {"0-17": 0, "18-25": 0, "26-35": 0, "36-50": 0, "50+": 0}
-
-
-@dataclass
-class Alert:
-  """Represents an alert for abnormal conditions"""
-  type: str  # "long_queue", "crowd_surge", "low_inventory", "long_table_occupancy"
-  severity: str  # "low", "medium", "high"
-  message: str
-  timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
-  metadata: Dict[str, object] = field(default_factory=dict)
+  return {"child": 0, "young": 0, "adult": 0, "mature": 0, "senior": 0}
 
 
 def bucket_for_age(age: Optional[float]) -> str:
+  """
+  Categorize age into meaningful life stages:
+  - child: 0-17 (Çocuk)
+  - young: 18-35 (Genç)
+  - adult: 36-50 (Orta yaş)
+  - mature: 51-70 (Deneyimli)
+  - senior: 70+ (İleri yaş)
+  """
   if age is None:
     return "unknown"
   age_val = float(age)
   if age_val < 18:
-    return "0-17"
-  if age_val < 26:
-    return "18-25"
+    return "child"
   if age_val < 36:
-    return "26-35"
+    return "young"
   if age_val < 51:
-    return "36-50"
-  return "50+"
+    return "adult"
+  if age_val < 71:
+    return "mature"
+  return "senior"
 
 
 @dataclass
@@ -51,6 +49,15 @@ class QueueSnapshot:
 
 
 @dataclass
+class ActivePersonSnapshot:
+  id: int
+  age: Optional[float]
+  age_bucket: str
+  gender: str
+  dwell_seconds: float
+
+
+@dataclass
 class CameraMetrics:
   people_in: int = 0
   people_out: int = 0
@@ -60,8 +67,10 @@ class CameraMetrics:
   queue: QueueSnapshot = field(default_factory=lambda: QueueSnapshot(0, 0.0, 0.0))
   tables: List[TableSnapshot] = field(default_factory=list)
   heatmap: List[List[int]] = field(default_factory=list)
-  alerts: List[Alert] = field(default_factory=list)
+  active_people: List[ActivePersonSnapshot] = field(default_factory=list)
   ts: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+  fps: float = 0.0
+  avg_dwell_time: float = 0.0
 
   def to_dict(self) -> Dict[str, object]:
     return {
@@ -87,14 +96,16 @@ class CameraMetrics:
         for table in self.tables
       ],
       "heatmap": self.heatmap,
-      "alerts": [
+      "activePeople": [
         {
-          "type": alert.type,
-          "severity": alert.severity,
-          "message": alert.message,
-          "timestamp": alert.timestamp,
-          "metadata": alert.metadata,
+          "id": person.id,
+          "age": person.age,
+          "ageBucket": person.age_bucket,
+          "gender": person.gender,
+          "dwellSeconds": round(person.dwell_seconds, 1),
         }
-        for alert in self.alerts
+        for person in self.active_people
       ],
+      "fps": round(self.fps, 1),
+      "avgDwellTime": round(self.avg_dwell_time, 1),
     }

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import subprocess
-import re
 from pathlib import Path
 
 from .analytics import CameraAnalyticsEngine
@@ -16,10 +15,11 @@ def get_live_stream_url(url: str) -> str:
   if url.startswith('rtsp://') or url.startswith('rtmp://') or url.endswith('.m3u8'):
     return url
 
-  print(f"🔍 Detecting live stream format...")
+  print(f"\n🔍 Detecting live stream format...")
 
   # Try yt-dlp first (better for YouTube) - for live streams use 95 format (best video only)
   try:
+    print("   Trying yt-dlp...")
     result = subprocess.run(
       ['yt-dlp', '-f', '95/96/best', '-g', url],
       capture_output=True,
@@ -28,15 +28,19 @@ def get_live_stream_url(url: str) -> str:
     )
     if result.returncode == 0 and result.stdout.strip():
       stream_url = result.stdout.strip().split('\n')[0]  # Take first URL if multiple
-      print(f"✓ Found stream using yt-dlp")
+      print(f"   ✓ Found stream using yt-dlp")
       return stream_url
+    else:
+      if result.stderr:
+        print(f"   yt-dlp error: {result.stderr[:200]}")
   except FileNotFoundError:
-    print("⚠️  yt-dlp not found. Install with: brew install yt-dlp")
+    print("   ⚠️  yt-dlp not found. Install with: brew install yt-dlp")
   except subprocess.TimeoutExpired:
-    print("⚠️  yt-dlp timeout")
+    print("   ⚠️  yt-dlp timeout")
 
   # Try streamlink (better for Twitch)
   try:
+    print("   Trying streamlink...")
     result = subprocess.run(
       ['streamlink', '--stream-url', url, 'best'],
       capture_output=True,
@@ -44,14 +48,14 @@ def get_live_stream_url(url: str) -> str:
       timeout=15
     )
     if result.returncode == 0 and result.stdout.strip():
-      print(f"✓ Found stream using streamlink")
+      print(f"   ✓ Found stream using streamlink")
       return result.stdout.strip()
   except FileNotFoundError:
-    print("⚠️  streamlink not found. Install with: brew install streamlink")
+    print("   ⚠️  streamlink not found. Install with: brew install streamlink")
   except subprocess.TimeoutExpired:
-    print("⚠️  streamlink timeout")
+    print("   ⚠️  streamlink timeout")
 
-  print("❌ Could not extract stream URL. Make sure yt-dlp or streamlink is installed.")
+  print("   ❌ Could not extract stream URL.")
   return url
 
 
@@ -104,21 +108,32 @@ def main() -> None:
   # Parse source - could be camera index, file, or live stream URL
   try:
     source = int(args.source)
+    print(f"\n📹 Using camera index: {source}")
   except ValueError:
     source_str = args.source
+
     # Check if it's a live stream URL
     if any(domain in source_str for domain in ['youtube.com', 'youtu.be', 'twitch.tv', 'facebook.com', 'instagram.com']):
-      print(f"🌐 Live stream detected: {source_str}")
+      print(f"\n🌐 Live stream detected: {source_str}")
       extracted_url = get_live_stream_url(source_str)
-      if extracted_url != source_str:  # Successfully extracted
+
+      if extracted_url != source_str and not extracted_url.startswith('http'):
+        # Failed to extract
+        print(f"\n❌ Failed to extract stream URL")
+        print(f"   Make sure yt-dlp is installed: brew install yt-dlp")
+        print(f"   Trying original URL anyway...")
+        source = source_str
+      elif extracted_url != source_str:
+        # Successfully extracted
         source = extracted_url
-        print(f"✓ Direct stream URL obtained")
-        print(f"  Length: {len(source)} chars")
+        print(f"\n✓ Direct stream URL obtained ({len(source)} chars)")
+        print(f"   URL: {source[:80]}...")
       else:
-        print(f"❌ Failed to extract stream URL")
-        print(f"   Please install: brew install yt-dlp")
-        return
+        # No extraction happened
+        print(f"\n⚠️  Using original URL (no extraction)")
+        source = source_str
     else:
+      print(f"\n📁 Using file/URL: {source_str}")
       source = source_str
 
   config = load_config(args.config)
@@ -130,6 +145,8 @@ def main() -> None:
     sample_interval=args.interval,
     display=args.display,
   )
+
+  print(f"\n🚀 Starting analytics engine...\n")
   engine.run()
 
 

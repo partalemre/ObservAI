@@ -1,4 +1,0 @@
-#!/bin/sh
-if command -v commitlint >/dev/null 2>&1; then
-  npx --yes @commitlint/cli -x @commitlint/config-conventional -E HUSKY_GIT_PARAMS 2>/dev/null || true
-fi

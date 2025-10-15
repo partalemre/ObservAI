@@ -9,7 +9,7 @@ import json
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, List, Set
 
 from aiohttp import web
 import socketio
@@ -67,7 +67,7 @@ class AnalyticsWebSocketServer:
         """Broadcast GlobalStream data to all clients"""
         await self.sio.emit("global", data)
 
-    async def broadcast_tracks(self, tracks: list):
+    async def broadcast_tracks(self, tracks: List[Dict]):
         """Broadcast TrackStream data to all clients"""
         await self.sio.emit("tracks", tracks)
 

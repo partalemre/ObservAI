@@ -5,7 +5,7 @@ import time
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Deque, Dict, Iterable, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -20,7 +20,7 @@ from ultralytics import YOLO
 from .config import AnalyticsConfig, EntranceLine, Zone
 from .geometry import heatmap_bin, line_side, point_in_polygon
 from .metrics import (
-  Alert,
+  ActivePersonSnapshot,
   CameraMetrics,
   QueueSnapshot,
   TableSnapshot,
@@ -42,14 +42,49 @@ class TrackedPerson:
   inside: bool = False
   age: Optional[float] = None
   gender: str = "unknown"
-  age_history: Deque[float] = field(default_factory=lambda: deque(maxlen=5))
-  gender_history: Deque[str] = field(default_factory=lambda: deque(maxlen=6))
-  gender_confidence: float = 0.5
+  state: str = "entering"
   active_zones: Dict[str, float] = field(default_factory=dict)
+
+  # Temporal smoothing for demographics
+  age_history: deque = field(default_factory=lambda: deque(maxlen=24))
+  gender_history: deque = field(default_factory=lambda: deque(maxlen=24))
+  gender_confidence: float = 0.5
 
   def contains_pixel(self, px: float, py: float) -> bool:
     x1, y1, x2, y2 = self.bbox_norm
     return x1 <= px <= x2 and y1 <= py <= y2
+
+  def update_age(self, new_age: float, max_samples: int = 10) -> None:
+    """Update age with temporal smoothing - increased samples for stability"""
+    if new_age is None:
+      return
+    self.age_history.append(float(new_age))
+    samples = list(self.age_history)
+    if len(samples) >= 3:
+      self.age = float(np.median(samples))
+    else:
+      self.age = float(np.mean(samples))
+
+  def update_gender(self, new_gender: str, max_samples: int = 10) -> None:
+    """Update gender with majority voting - increased samples for stability"""
+    if not new_gender or new_gender == "unknown":
+      return
+
+    self.gender_history.append(new_gender)
+    if len(self.gender_history) > max_samples:
+      self.gender_history.popleft()
+
+    male_votes = self.gender_history.count("male")
+    female_votes = self.gender_history.count("female")
+
+    total_votes = len(self.gender_history)
+    if total_votes == 0:
+      return
+
+    if male_votes / total_votes >= 0.6:
+      self.gender = "male"
+    elif female_votes / total_votes >= 0.6:
+      self.gender = "female"
 
 
 class CameraAnalyticsEngine:
@@ -61,18 +96,48 @@ class CameraAnalyticsEngine:
     model_path: str = "yolov8n.pt",
     sample_interval: float = 1.0,
     display: bool = False,
+    show_zones: bool = False,
+    on_metrics: Optional[Callable[[Dict[str, object]], None]] = None,
+    on_tracks: Optional[Callable[[List[Dict[str, object]]], None]] = None,
   ) -> None:
     self.config = config
     self.source = source
     self.output_path = output_path
     self.sample_interval = sample_interval
     self.display = display
+    self.show_zones = show_zones
+    self.on_metrics = on_metrics
+    self.on_tracks = on_tracks
 
     self.model = YOLO(model_path)
+    # Optimize YOLO runtime configuration
+    try:
+      self.model.overrides['verbose'] = False
+      self.model.overrides['conf'] = 0.5
+      self.model.overrides['iou'] = 0.45
+      self.model.overrides['max_det'] = 50
+      self.model.overrides['half'] = False
+      self.model.overrides['device'] = 'cpu'
+    except Exception:  # pragma: no cover - safety guard
+      pass
+
+    # Frame skipping for face analysis
+    self.face_detection_interval = 10
+    self.frame_count = 0
+
+    # Adjust video stride for remote streams to improve stability
+    self.vid_stride = 1
+    if isinstance(self.source, str):
+      source_str = str(self.source)
+      if source_str.startswith(("rtsp://", "rtmp://", "http://", "https://")):
+        self.vid_stride = 2
+        print(f"[INFO] Remote stream detected. Using vid_stride={self.vid_stride} for efficiency")
+
     if FaceAnalysis is not None:
       try:
-        self.face_app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
-        self.face_app.prepare(ctx_id=0, det_size=(640, 640))
+        self.face_app = FaceAnalysis(name="buffalo_s", providers=["CPUExecutionProvider"])
+        self.face_app.prepare(ctx_id=0, det_size=(320, 320))
+        print("[INFO] InsightFace initialized (buffalo_s model)")
       except Exception as err:  # pragma: no cover - runtime-only
         print(f"[WARN] InsightFace initialization failed: {err}. Demographics disabled.")
         self.face_app = None
@@ -83,7 +148,7 @@ class CameraAnalyticsEngine:
     self.people_in = 0
     self.people_out = 0
     self.heatmap = np.zeros(
-      (self.config.heatmap.grid_height, self.config.heatmap.grid_width), dtype=np.int32
+      (self.config.heatmap.grid_height, self.config.heatmap.grid_width), dtype=np.float32
     )
 
     # zone stats keyed by zone id
@@ -101,9 +166,10 @@ class CameraAnalyticsEngine:
     self.zone_active_members: Dict[str, Dict[int, float]] = defaultdict(dict)
     self.zone_completed_durations: Dict[str, list[float]] = defaultdict(list)
 
-    # Tracking for alerts
-    self.previous_people_count = 0
-    self.last_crowd_check = time.time()
+    # Performance metrics
+    self.fps = 0.0
+    self.fps_counter = 0
+    self.fps_start_time = time.time()
 
   def run(self) -> None:
     last_write = 0.0
@@ -115,7 +181,14 @@ class CameraAnalyticsEngine:
       classes=[0],
       tracker="bytetrack.yaml",
       persist=True,
+      imgsz=512,
+      device='cpu',
+      vid_stride=self.vid_stride,
     )
+
+    print("[INFO] Starting camera analytics pipeline...")
+    print(f"[INFO] Face detection interval: every {self.face_detection_interval} frames")
+    print(f"[INFO] Video stride: {self.vid_stride} (source: {self.source})")
 
     try:
       for result in results:
@@ -124,6 +197,13 @@ class CameraAnalyticsEngine:
         timestamp = time.time()
         self._update_tracks(result, frame_w, frame_h, timestamp)
         self._update_demographics(frame)
+        self._emit_track_stream(timestamp)
+
+        self.fps_counter += 1
+        if timestamp - self.fps_start_time >= 1.0:
+          self.fps = self.fps_counter / (timestamp - self.fps_start_time)
+          self.fps_counter = 0
+          self.fps_start_time = timestamp
 
         if self.display:
           annotated = self._draw_overlay(frame.copy(), frame_w, frame_h)
@@ -132,6 +212,7 @@ class CameraAnalyticsEngine:
 
         if timestamp - last_write >= self.sample_interval:
           metrics = self._build_metrics()
+          self._emit_metrics_stream(metrics, int(timestamp * 1000))
           self._write_metrics(metrics)
           last_write = timestamp
 
@@ -168,6 +249,7 @@ class CameraAnalyticsEngine:
           bbox_norm=(x1_norm, y1_norm, x2_norm, y2_norm),
           center_norm=center_norm,
         )
+        person.state = "entering"
         self.tracks[int(track_id)] = person
       else:
         person.prev_center_norm = person.center_norm
@@ -184,6 +266,8 @@ class CameraAnalyticsEngine:
   def _update_inside_state(self, person: TrackedPerson, now: float) -> None:
     if not self.config.entrance_line:
       person.inside = True
+      dwell = now - person.first_seen
+      person.state = "entering" if dwell < 2.0 else "present"
       return
 
     entrance: EntranceLine = self.config.entrance_line
@@ -202,6 +286,12 @@ class CameraAnalyticsEngine:
 
     previously_inside = person.inside
     person.inside = inside
+    dwell = now - person.first_seen
+
+    if person.inside:
+      person.state = "entering" if dwell < 2.0 else "present"
+    else:
+      person.state = "exiting" if person.counted_in else "entering"
 
     if previously_inside != inside and person.prev_center_norm is not None:
       if inside and not person.counted_in:
@@ -210,6 +300,7 @@ class CameraAnalyticsEngine:
       elif not inside and person.counted_in and not person.counted_out:
         self.people_out += 1
         person.counted_out = True
+        person.state = "exiting"
         self._finalize_active_zones(person, now)
 
   def _update_zones(self, person: TrackedPerson, now: float) -> None:
@@ -237,7 +328,7 @@ class CameraAnalyticsEngine:
     row, col = heatmap_bin(
       center_norm, self.config.heatmap.grid_width, self.config.heatmap.grid_height
     )
-    self.heatmap[row, col] += 1
+    self.heatmap[row, col] += 5
 
   def _drop_stale_tracks(self, active_ids: set[int], now: float, ttl: float = 3.0) -> None:
     for track_id in list(self.tracks.keys()):
@@ -283,20 +374,25 @@ class CameraAnalyticsEngine:
             best_track = person
             best_distance = distance
 
-      if best_track:
-        best_track.age = float(face.age) if face.age is not None else None
+      if best_track and best_distance < 10000:
+        # Use temporal smoothing for better accuracy
+        if face.age is not None:
+          best_track.update_age(float(face.age))
         if hasattr(face, "sex") and face.sex is not None:
-          # InsightFace may return sex as string ('M'/'F') or float (0.0-1.0)
-          sex_value = face.sex
-          if isinstance(sex_value, str):
-            best_track.gender = "male" if sex_value.upper() in ('M', 'MALE') else "female"
+          # Handle both old (float) and new (string) InsightFace API
+          if isinstance(face.sex, str):
+            detected_gender = "male" if face.sex.upper() == 'M' else "female"
           else:
-            # Float value: > 0.5 typically means male
-            best_track.gender = "male" if float(sex_value) > 0.5 else "female"
-        else:
-          best_track.gender = "unknown"
+            detected_gender = "male" if float(face.sex) > 0.5 else "female"
+          best_track.update_gender(detected_gender)
+        elif hasattr(face, "gender") and face.gender is not None:
+          detected_gender = "male" if int(face.gender) == 1 else "female"
+          best_track.update_gender(detected_gender)
 
   def _build_metrics(self) -> CameraMetrics:
+    # Decay heatmap over time
+    self.heatmap *= 0.9
+
     metrics = CameraMetrics()
     metrics.people_in = self.people_in
     metrics.people_out = self.people_out
@@ -304,19 +400,40 @@ class CameraAnalyticsEngine:
 
     age_buckets = default_age_buckets()
     gender_counts = {"male": 0, "female": 0, "unknown": 0}
+    dwell_times: list[float] = []
+    active_people: list[ActivePersonSnapshot] = []
+    now = time.time()
+
     for person in self.tracks.values():
       if not person.inside:
         continue
+
+      dwell = now - person.first_seen
+      dwell_times.append(dwell)
+
       if person.gender in gender_counts:
         gender_counts[person.gender] += 1
       else:
         gender_counts["unknown"] += 1
+
       bucket = bucket_for_age(person.age)
       if bucket != "unknown":
         age_buckets[bucket] += 1
 
+      active_people.append(
+        ActivePersonSnapshot(
+          id=person.track_id,
+          age=person.age,
+          age_bucket=bucket if bucket != "unknown" else "unknown",
+          gender=person.gender,
+          dwell_seconds=dwell,
+        )
+      )
+
     metrics.age_buckets = age_buckets
     metrics.gender = gender_counts
+    metrics.active_people = active_people
+    metrics.avg_dwell_time = float(np.mean(dwell_times)) if dwell_times else 0.0
 
     if self.queue_id:
       durations = self.zone_completed_durations[self.queue_id]
@@ -342,79 +459,93 @@ class CameraAnalyticsEngine:
       )
     metrics.tables = table_snapshots
     metrics.heatmap = self.heatmap.astype(int).tolist()
-
-    # Generate alerts
-    metrics.alerts = self._generate_alerts(metrics)
-
+    metrics.fps = self.fps
     return metrics
 
-  def _generate_alerts(self, metrics: CameraMetrics) -> list[Alert]:
-    """Generate alerts based on current metrics and thresholds"""
-    alerts: list[Alert] = []
-    now = time.time()
-    thresholds = self.config.alert_thresholds
+  def _heatmap_to_points(self, grid: List[List[int]]) -> List[Dict[str, float]]:
+    if not grid:
+      return []
 
-    # Check for long queue wait times
-    if metrics.queue.average_wait_seconds > thresholds.queue_long_wait:
-      alerts.append(
-        Alert(
-          type="long_queue",
-          severity="high" if metrics.queue.average_wait_seconds > 300 else "medium",
-          message=f"Queue wait time is {int(metrics.queue.average_wait_seconds)}s (avg). Consider adding staff.",
-          metadata={
-            "averageWaitSeconds": round(metrics.queue.average_wait_seconds, 1),
-            "queueCount": metrics.queue.current,
-          },
+    height = len(grid)
+    width = len(grid[0]) if height else 0
+    if width == 0:
+      return []
+
+    max_value = 0
+    for row in grid:
+      row_max = max(row) if row else 0
+      if row_max > max_value:
+        max_value = row_max
+
+    if max_value <= 0:
+      max_value = 1
+
+    points: List[Dict[str, float]] = []
+    for y, row in enumerate(grid):
+      for x, value in enumerate(row):
+        if value <= 0:
+          continue
+        points.append(
+          {
+            "x": (x + 0.5) / width,
+            "y": (y + 0.5) / height,
+            "intensity": min(1.0, (value / max_value)**0.5),
+          }
         )
-      )
+    return points
 
-    # Check for high queue count
-    if metrics.queue.current >= thresholds.queue_high_count:
-      alerts.append(
-        Alert(
-          type="long_queue",
-          severity="high" if metrics.queue.current >= 12 else "medium",
-          message=f"Queue has {metrics.queue.current} people waiting. Immediate attention needed.",
-          metadata={"queueCount": metrics.queue.current},
-        )
-      )
+  def _metrics_to_stream(self, metrics: CameraMetrics, timestamp_ms: int) -> Dict[str, object]:
+    heatmap_points = self._heatmap_to_points(metrics.heatmap)
 
-    # Check for crowd surge (sudden increase in people count)
-    if now - self.last_crowd_check >= thresholds.crowd_surge_window:
-      people_increase = metrics.current - self.previous_people_count
-      if people_increase >= thresholds.crowd_surge_threshold:
-        alerts.append(
-          Alert(
-            type="crowd_surge",
-            severity="medium",
-            message=f"Sudden crowd increase detected: {people_increase} new customers in {int(thresholds.crowd_surge_window)}s.",
-            metadata={
-              "increase": people_increase,
-              "currentCount": metrics.current,
-              "previousCount": self.previous_people_count,
-            },
-          )
-        )
-      self.previous_people_count = metrics.current
-      self.last_crowd_check = now
+    return {
+      "timestamp": timestamp_ms,
+      "entries": metrics.people_in,
+      "exits": metrics.people_out,
+      "current": metrics.current,
+      "queue": metrics.queue.current,
+      "demographics": {
+        "gender": metrics.gender,
+        "ages": metrics.age_buckets,
+      },
+      "heatmap": {
+        "points": heatmap_points,
+        "gridWidth": len(metrics.heatmap[0]) if metrics.heatmap else 0,
+        "gridHeight": len(metrics.heatmap),
+      },
+      "fps": round(metrics.fps, 1),
+    }
 
-    # Check for tables with long occupancy times
-    for table in metrics.tables:
-      if table.longest_stay_seconds > thresholds.table_long_stay:
-        alerts.append(
-          Alert(
-            type="long_table_occupancy",
-            severity="low",
-            message=f"Table '{table.name or table.id}' has been occupied for {int(table.longest_stay_seconds / 60)}+ minutes.",
-            metadata={
-              "tableId": table.id,
-              "tableName": table.name,
-              "longestStaySeconds": round(table.longest_stay_seconds, 1),
-            },
-          )
-        )
+  def _build_track_stream(self, now: float) -> List[Dict[str, object]]:
+    track_payload: List[Dict[str, object]] = []
+    for track_id, person in self.tracks.items():
+      x1, y1, x2, y2 = person.bbox_norm
+      width = max(0.0, x2 - x1)
+      height = max(0.0, y2 - y1)
+      dwell = max(0.0, now - person.first_seen)
 
-    return alerts
+      age_bucket = bucket_for_age(person.age)
+      payload = {
+        "id": f"track_{track_id}",
+        "bbox": [float(x1), float(y1), float(width), float(height)],
+        "gender": person.gender if person.gender in {"male", "female"} else "unknown",
+        "ageBucket": age_bucket if age_bucket != "unknown" else None,
+        "dwellSec": dwell,
+        "state": person.state,
+      }
+      track_payload.append(payload)
+    return track_payload
+
+  def _emit_metrics_stream(self, metrics: CameraMetrics, timestamp_ms: int) -> None:
+    if self.on_metrics is None:
+      return
+    payload = self._metrics_to_stream(metrics, timestamp_ms)
+    self.on_metrics(payload)
+
+  def _emit_track_stream(self, now: float) -> None:
+    if self.on_tracks is None:
+      return
+    payload = self._build_track_stream(now)
+    self.on_tracks(payload)
 
   def _write_metrics(self, metrics: CameraMetrics) -> None:
     self.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -422,133 +553,137 @@ class CameraAnalyticsEngine:
       json.dump(metrics.to_dict(), handle, indent=2)
 
   def _draw_overlay(self, frame: np.ndarray, frame_w: int, frame_h: int) -> np.ndarray:
-    """Modern, high-quality overlay with glassmorphism UI"""
+    # Create semi-transparent overlay for glass effect
     overlay = frame.copy()
 
-    # Draw zones with semi-transparent fill
-    for zone in self.zone_definitions.values():
-      polygon = [(int(x * frame_w), int(y * frame_h)) for x, y in zone.polygon]
-      pts = np.array(polygon, np.int32).reshape((-1, 1, 2))
-
-      # Fill zone with transparent color
-      zone_overlay = overlay.copy()
-      cv2.fillPoly(zone_overlay, [pts], (100, 50, 200))
-      cv2.addWeighted(overlay, 0.9, zone_overlay, 0.1, 0, overlay)
-
-      # Border with glow effect
-      cv2.polylines(overlay, [pts], True, (150, 100, 255), 3, cv2.LINE_AA)
-
-      # Zone label with background
-      label = zone.name or zone.id
-      (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.6, 2)
-      label_pos = (polygon[0][0], polygon[0][1] - 10)
-      cv2.rectangle(overlay,
-                   (label_pos[0] - 5, label_pos[1] - text_h - 5),
-                   (label_pos[0] + text_w + 5, label_pos[1] + 5),
-                   (40, 40, 60), -1)
-      cv2.putText(overlay, label, label_pos, cv2.FONT_HERSHEY_DUPLEX, 0.6, (200, 150, 255), 2, cv2.LINE_AA)
-
-    # Draw entrance line with glow
-    if self.config.entrance_line:
-      line = self.config.entrance_line
-      start = (int(line.start[0] * frame_w), int(line.start[1] * frame_h))
-      end = (int(line.end[0] * frame_w), int(line.end[1] * frame_h))
-
-      # Glow effect
-      cv2.line(overlay, start, end, (80, 255, 255), 8, cv2.LINE_AA)
-      cv2.line(overlay, start, end, (0, 240, 240), 4, cv2.LINE_AA)
-
-      # Label with background
-      (text_w, text_h), _ = cv2.getTextSize("ENTRANCE", cv2.FONT_HERSHEY_DUPLEX, 0.7, 2)
-      text_pos = (start[0], start[1] - 15)
-      cv2.rectangle(overlay,
-                   (text_pos[0] - 5, text_pos[1] - text_h - 5),
-                   (text_pos[0] + text_w + 5, text_pos[1] + 5),
-                   (40, 60, 60), -1)
-      cv2.putText(overlay, "ENTRANCE", text_pos, cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 255, 255), 2, cv2.LINE_AA)
-
-    # Draw tracked people with modern boxes
     for person in self.tracks.values():
       x1, y1, x2, y2 = person.bbox_norm
       p1 = (int(x1 * frame_w), int(y1 * frame_h))
       p2 = (int(x2 * frame_w), int(y2 * frame_h))
+      color = (0, 255, 0) if person.inside else (0, 0, 255)
 
-      # Color based on status
-      if person.inside:
-        box_color = (0, 255, 150)  # Cyan-green for inside
-        text_color = (0, 255, 200)
-      else:
-        box_color = (100, 100, 255)  # Red-ish for outside
-        text_color = (150, 150, 255)
+      # Draw bounding box
+      cv2.rectangle(frame, p1, p2, color, 2)
 
-      # Draw rounded rectangle effect with corners
-      thickness = 3
-      corner_length = 20
-
-      # Top-left corner
-      cv2.line(overlay, p1, (p1[0] + corner_length, p1[1]), box_color, thickness, cv2.LINE_AA)
-      cv2.line(overlay, p1, (p1[0], p1[1] + corner_length), box_color, thickness, cv2.LINE_AA)
-
-      # Top-right corner
-      cv2.line(overlay, (p2[0], p1[1]), (p2[0] - corner_length, p1[1]), box_color, thickness, cv2.LINE_AA)
-      cv2.line(overlay, (p2[0], p1[1]), (p2[0], p1[1] + corner_length), box_color, thickness, cv2.LINE_AA)
-
-      # Bottom-left corner
-      cv2.line(overlay, (p1[0], p2[1]), (p1[0] + corner_length, p2[1]), box_color, thickness, cv2.LINE_AA)
-      cv2.line(overlay, (p1[0], p2[1]), (p1[0], p2[1] - corner_length), box_color, thickness, cv2.LINE_AA)
-
-      # Bottom-right corner
-      cv2.line(overlay, p2, (p2[0] - corner_length, p2[1]), box_color, thickness, cv2.LINE_AA)
-      cv2.line(overlay, p2, (p2[0], p2[1] - corner_length), box_color, thickness, cv2.LINE_AA)
-
-      # Person info
-      info_parts = [f"ID:{person.track_id}"]
+      # Create label with age category
+      label = f"ID {person.track_id}"
       if person.age:
-        info_parts.append(f"{int(person.age)}y")
+        age_category = bucket_for_age(person.age)
+        category_display = {
+          "child": "Child (0-12)",
+          "teen": "Teen (13-19)",
+          "adult": "Adult (20-59)",
+          "senior": "Senior (60+)"
+        }.get(age_category, "Unknown")
+        label += f" | {category_display}"
       if person.gender != "unknown":
-        info_parts.append(f"{person.gender[0].upper()}")
+        gender_display = "M" if person.gender == "male" else "F"
+        label += f" | {gender_display}"
 
-      label = " | ".join(info_parts)
-      (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+      # Draw label with background
+      font = cv2.FONT_HERSHEY_SIMPLEX
+      font_scale = 0.5
+      thickness = 1
+      (text_w, text_h), baseline = cv2.getTextSize(label, font, font_scale, thickness)
 
-      # Label background with glassmorphism
-      label_bg_p1 = (p1[0], max(5, p1[1] - text_h - 15))
-      label_bg_p2 = (p1[0] + text_w + 10, max(text_h + 10, p1[1] - 5))
-      cv2.rectangle(overlay, label_bg_p1, label_bg_p2, (30, 30, 40), -1)
-      cv2.rectangle(overlay, label_bg_p1, label_bg_p2, box_color, 2, cv2.LINE_AA)
-      cv2.putText(overlay, label, (p1[0] + 5, max(text_h + 5, p1[1] - 10)),
-                 cv2.FONT_HERSHEY_DUPLEX, 0.5, text_color, 1, cv2.LINE_AA)
+      # Glass background for label
+      label_y = max(20, p1[1] - 10)
+      cv2.rectangle(overlay,
+                   (p1[0], label_y - text_h - 5),
+                   (p1[0] + text_w + 10, label_y + 5),
+                   (0, 0, 0), -1)
 
-    # Modern stats panel (top-left)
+      cv2.putText(frame, label, (p1[0] + 5, label_y), font, font_scale, color, thickness)
+
+    # Only show zones if explicitly requested (for testing/setup)
+    if self.show_zones:
+      if self.config.entrance_line:
+        line = self.config.entrance_line
+        start = (int(line.start[0] * frame_w), int(line.start[1] * frame_h))
+        end = (int(line.end[0] * frame_w), int(line.end[1] * frame_h))
+        cv2.line(frame, start, end, (255, 255, 0), 2)
+        cv2.putText(frame, "Entrance", (start[0], start[1] - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+
+      for zone in self.zone_definitions.values():
+        polygon = [(int(x * frame_w), int(y * frame_h)) for x, y in zone.polygon]
+        pts = np.array(polygon, np.int32).reshape((-1, 1, 2))
+        cv2.polylines(frame, [pts], True, (255, 0, 0), 2)
+        label = zone.name or zone.id
+        cv2.putText(
+          frame,
+          label,
+          (polygon[0][0], polygon[0][1] - 5),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.5,
+          (255, 0, 0),
+          1,
+        )
+
     metrics = self._build_metrics()
-    panel_x, panel_y = 20, 20
-    panel_w, panel_h = 280, 150
 
-    # Glassmorphism background
-    stats_overlay = overlay.copy()
-    cv2.rectangle(stats_overlay, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h),
-                 (30, 30, 40), -1)
-    cv2.addWeighted(overlay, 0.4, stats_overlay, 0.6, 0, overlay)
+    # Create glass-morphism stats panel
+    panel_x, panel_y = 10, 10
+    panel_w, panel_h = 280, 200
 
-    # Border with gradient effect
-    cv2.rectangle(overlay, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h),
-                 (100, 200, 255), 3, cv2.LINE_AA)
+    # Draw semi-transparent background
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h), (20, 20, 20), -1)
+    cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+
+    # Draw border
+    cv2.rectangle(frame, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h), (147, 112, 219), 2)
 
     # Title
-    cv2.putText(overlay, "ObservAI Analytics", (panel_x + 10, panel_y + 30),
-               cv2.FONT_HERSHEY_DUPLEX, 0.7, (150, 220, 255), 2, cv2.LINE_AA)
+    cv2.putText(frame, "LIVE ANALYTICS", (panel_x + 10, panel_y + 25),
+               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (147, 112, 219), 2)
 
-    # Stats with icons (using text symbols)
+    # Stats
+    y_offset = panel_y + 50
+    line_height = 22
+
     stats = [
-      (f"↓ In: {metrics.people_in}", (0, 255, 150)),
-      (f"↑ Out: {metrics.people_out}", (255, 100, 100)),
-      (f"● Current: {metrics.current}", (0, 200, 255)),
-      (f"⏱ Queue: {metrics.queue.current}", (255, 200, 0))
+      ("IN", metrics.people_in, (0, 255, 0)),
+      ("OUT", metrics.people_out, (0, 100, 255)),
+      ("CURRENT", metrics.current, (0, 200, 255)),
+      ("QUEUE", metrics.queue.current, (255, 200, 0)),
     ]
 
-    for idx, (stat_text, color) in enumerate(stats):
-      y_pos = panel_y + 60 + idx * 22
-      cv2.putText(overlay, stat_text, (panel_x + 15, y_pos),
-                 cv2.FONT_HERSHEY_DUPLEX, 0.6, color, 2, cv2.LINE_AA)
+    for label, value, color in stats:
+      cv2.putText(frame, f"{label}:", (panel_x + 15, y_offset),
+                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+      cv2.putText(frame, str(value), (panel_x + 120, y_offset),
+                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+      y_offset += line_height
 
-    return overlay
+    # Demographics mini chart
+    demo_y = y_offset + 10
+    cv2.line(frame, (panel_x + 10, demo_y), (panel_x + panel_w - 10, demo_y), (100, 100, 100), 1)
+
+    demo_y += 15
+    cv2.putText(frame, "AGE GROUPS:", (panel_x + 15, demo_y),
+               cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 200, 200), 1)
+
+    demo_y += 18
+    age_categories = [
+      ("Child", metrics.age_buckets.get("child", 0)),
+      ("Teen", metrics.age_buckets.get("teen", 0)),
+      ("Adult", metrics.age_buckets.get("adult", 0)),
+      ("Senior", metrics.age_buckets.get("senior", 0)),
+    ]
+
+    total_people = max(sum(v for _, v in age_categories), 1)
+
+    for cat_name, count in age_categories:
+      # Bar chart
+      bar_width = int((count / total_people) * (panel_w - 100)) if count > 0 else 0
+      cv2.rectangle(frame, (panel_x + 80, demo_y - 10), (panel_x + 80 + bar_width, demo_y + 2),
+                   (147, 112, 219), -1)
+
+      cv2.putText(frame, f"{cat_name[:3]}: {count}", (panel_x + 15, demo_y),
+                 cv2.FONT_HERSHEY_SIMPLEX, 0.35, (150, 150, 150), 1)
+      demo_y += 14
+
+    # Blend overlay
+    cv2.addWeighted(overlay, 0.3, frame, 0.7, 0, frame)
+
+    return frame

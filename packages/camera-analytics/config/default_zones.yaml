@@ -37,10 +37,3 @@ tables:
 heatmap:
   grid_width: 6
   grid_height: 4
-
-alert_thresholds:
-  queue_long_wait: 180.0 # seconds (3 minutes)
-  queue_high_count: 8 # number of people
-  crowd_surge_threshold: 5 # sudden increase in people count
-  crowd_surge_window: 30.0 # seconds to detect surge
-  table_long_stay: 7200.0 # seconds (2 hours)
