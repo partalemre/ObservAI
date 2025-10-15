@@ -2,15 +2,19 @@ Metadata-Version: 2.4
 Name: camera-analytics
 Version: 0.1.0
 Summary: ObservAI camera analytics pipeline for real-time cafe insights
-Requires-Python: >=3.9
+Requires-Python: <3.15,>=3.9
 Requires-Dist: numpy>=1.23
 Requires-Dist: opencv-python>=4.8.0
 Requires-Dist: ultralytics>=8.1.0
-Requires-Dist: insightface>=0.7.3
-Requires-Dist: onnxruntime>=1.16.0
 Requires-Dist: pyyaml>=6.0
 Requires-Dist: shapely>=2.0
 Requires-Dist: lapx>=0.5.2
+Requires-Dist: aiohttp>=3.9.1
+Requires-Dist: python-socketio[asyncio]>=5.11.0
+Requires-Dist: urllib3<2.0.0
+Provides-Extra: demographics
+Requires-Dist: insightface>=0.7.3; extra == "demographics"
+Requires-Dist: onnxruntime>=1.16.0; extra == "demographics"
 Provides-Extra: dev
 Requires-Dist: black>=23.3.0; extra == "dev"
 Requires-Dist: mypy>=1.6.0; extra == "dev"
