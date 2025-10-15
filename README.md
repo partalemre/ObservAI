@@ -31,36 +31,40 @@
 
 ```
 ObservAI/
-├── observai/
-│   ├── packages/
-│   │   └── camera-analytics/          # Python AI backend
-│   │       ├── camera_analytics/
-│   │       │   ├── analytics.py       # YOLO + tracking
-│   │       │   ├── metrics.py         # Data structures
-│   │       │   ├── websocket_server.py # Socket.IO server
-│   │       │   └── run_with_websocket.py # Main entry
-│   │       └── setup.py
-│   └── apps/
-│       └── web/                       # React frontend
-│           ├── src/
-│           │   ├── components/
-│           │   │   ├── charts/        # ECharts wrappers
-│           │   │   ├── panels/        # KPI, Demographics, etc.
-│           │   │   └── ui/            # Glass UI components
-│           │   ├── lib/
-│           │   │   ├── pixi-overlay.ts    # PixiJS renderer
-│           │   │   ├── websocket-client.ts # WS client
-│           │   │   └── mock-generator.ts   # Demo data
-│           │   ├── store/
-│           │   │   └── analyticsStore.ts  # Zustand state
-│           │   ├── config/
-│           │   │   └── theme.ts       # Design system
-│           │   └── types/
-│           │       └── streams.ts     # TypeScript types
-│           └── package.json
-├── start_camera_websocket.sh         # Launch script
+├── apps/
+│   └── api/                           # NestJS API (future)
+├── packages/
+│   ├── camera-analytics/              # Python AI backend
+│   │   ├── camera_analytics/
+│   │   │   ├── analytics.py           # YOLO + tracking
+│   │   │   ├── metrics.py             # Data structures
+│   │   │   ├── websocket_server.py    # Socket.IO server
+│   │   │   └── run_with_websocket.py  # Main entry
+│   │   └── config/
+│   │       └── default_zones.yaml     # Zone configuration
+│   └── data/                          # Data storage
+│       └── camera/
+│           └── latest_metrics.json    # Cached metrics
+├── docs/                              # Documentation
+│   ├── SETUP_GUIDE.md
+│   ├── QUICKSTART.md
+│   └── ...
+├── scripts/                           # Utility scripts
+│   ├── start_camera_websocket.sh      # Start camera with WS
+│   └── start_camera.sh                # Start camera only
+├── COMPLETE_GUIDE.md                  # Complete documentation
 └── README.md
 ```
+
+### Clean Project Structure
+
+The project has been restructured for better maintainability:
+
+- **`/apps`** - Application code (API, Web)
+- **`/packages`** - Reusable packages (camera-analytics, data)
+- **`/docs`** - All documentation files
+- **`/scripts`** - Shell scripts and utilities
+- **Root** - Configuration and main docs only
 
 ## 🚀 Quick Start
 
@@ -74,9 +78,9 @@ ObservAI/
 ### 1. Install Dependencies
 
 ```bash
-# Install Node.js dependencies
-cd observai
-pnpm install
+# Clone the repository
+git clone https://github.com/partalemre/ObservAI.git
+cd ObservAI
 
 # Install Python dependencies
 cd packages/camera-analytics
@@ -87,55 +91,36 @@ pip install -e .
 
 ### 2. Start the System
 
-#### Option A: Web Dashboard Only (Demo Mode)
+#### Option A: Camera Backend with WebSocket
 
 ```bash
-cd observai/apps/web
-pnpm dev
-```
+# From the root directory
 
-Open http://localhost:5173/dashboard
-
-The dashboard will run in **Demo Mode** with simulated data if no camera backend is running.
-
-#### Option B: Full System with Camera
-
-**Terminal 1 - Camera Backend + WebSocket Server:**
-```bash
 # MacBook camera
-./start_camera_websocket.sh 0
+./scripts/start_camera_websocket.sh 0
 
 # iPhone camera (Continuity Camera)
-./start_camera_websocket.sh 1
+./scripts/start_camera_websocket.sh 1
 
 # YouTube live stream
-./start_camera_websocket.sh "https://www.youtube.com/watch?v=VIDEO_ID"
+./scripts/start_camera_websocket.sh "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-**Terminal 2 - Web Frontend:**
-```bash
-cd observai/apps/web
-pnpm dev
-```
+**WebSocket Server will run on:** ws://localhost:5000
 
-**Access Points:**
-- Dashboard: http://localhost:5173/dashboard
-- Overlay: http://localhost:5173/overlay
-- WebSocket: ws://localhost:5000
+### 3. Accessing the System
 
-### 3. Using the System
+The camera analytics backend will:
+- Process video in real-time using YOLOv8
+- Track people using ByteTrack
+- Detect demographics with InsightFace
+- Broadcast metrics via WebSocket
 
-#### Dashboard View (`/dashboard`)
-- View all analytics in a clean, modern dashboard
-- Real-time KPIs, demographics, timelines, heatmaps
-- ECharts visualizations with smooth animations
-- Toggle between Live and Demo modes
+**Available Endpoints:**
+- WebSocket: `ws://localhost:5000`
+- Metrics: Real-time JSON data stream
 
-#### Overlay View (`/overlay`)
-- Live video with PixiJS overlay showing tracked people
-- Select camera source: MacBook, iPhone, or YouTube
-- Real-time track cards with dwell time, gender, age
-- Performance HUD showing FPS and latency
+For web dashboard integration, see the [Complete Guide](COMPLETE_GUIDE.md).
 
 ## 📊 Data Flow
 
@@ -208,19 +193,9 @@ ObservAI uses a modern glassmorphism design system:
 
 ## 🔧 Configuration
 
-### Environment Variables
-
-Create `observai/apps/web/.env`:
-
-```env
-VITE_WS_URL=http://localhost:5000
-VITE_API_URL=http://localhost:3001
-VITE_DEMO_MODE=false
-```
-
 ### Camera Configuration
 
-Edit `observai/packages/camera-analytics/config/default_zones.yaml`:
+Edit `packages/camera-analytics/config/default_zones.yaml`:
 
 ```yaml
 entrance_line:
@@ -281,12 +256,8 @@ tables:
 ## 🧪 Testing
 
 ```bash
-# Frontend tests
-cd observai/apps/web
-pnpm test
-
 # Python tests
-cd observai/packages/camera-analytics
+cd packages/camera-analytics
 python -m pytest
 ```
 
