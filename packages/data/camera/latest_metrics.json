@@ -1,24 +1,24 @@
 {
-  "ts": "2025-10-15T15:00:57.558542",
+  "ts": "2025-10-15T16:23:44.629171",
   "peopleIn": 0,
   "peopleOut": 0,
-  "current": 1,
+  "current": 2,
   "ageBuckets": {
     "child": 0,
-    "young": 0,
+    "young": 2,
     "adult": 0,
     "mature": 0,
     "senior": 0
   },
   "gender": {
-    "male": 0,
+    "male": 2,
     "female": 0,
-    "unknown": 1
+    "unknown": 0
   },
   "queue": {
-    "current": 1,
-    "averageWaitSeconds": 22.8,
-    "longestWaitSeconds": 22.8
+    "current": 2,
+    "averageWaitSeconds": 3.3,
+    "longestWaitSeconds": 79.1
   },
   "tables": [
     {
@@ -32,15 +32,15 @@
       "id": "table-2",
       "name": "Middle High-top",
       "currentOccupants": 0,
-      "avgStaySeconds": 0.0,
-      "longestStaySeconds": 0.0
+      "avgStaySeconds": 3.2,
+      "longestStaySeconds": 3.2
     },
     {
       "id": "table-3",
       "name": "Quiet Corner",
       "currentOccupants": 0,
-      "avgStaySeconds": 0.0,
-      "longestStaySeconds": 0.0
+      "avgStaySeconds": 4.0,
+      "longestStaySeconds": 4.0
     }
   ],
   "heatmap": [
@@ -56,36 +56,43 @@
       0,
       0,
       0,
-      1,
       0,
+      19,
       0
+    ],
+    [
+      73,
+      11,
+      23,
+      449,
+      180,
+      18
     ],
     [
       0,
       0,
-      922,
-      12,
-      0,
-      0
-    ],
-    [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      18,
+      195,
+      24,
+      15
     ]
   ],
   "activePeople": [
     {
-      "id": 1,
-      "age": null,
-      "ageBucket": "unknown",
-      "gender": "unknown",
-      "dwellSeconds": 59.9
+      "id": 285,
+      "age": 33.0,
+      "ageBucket": "young",
+      "gender": "male",
+      "dwellSeconds": 13.5
+    },
+    {
+      "id": 300,
+      "age": 35.5,
+      "ageBucket": "young",
+      "gender": "male",
+      "dwellSeconds": 2.4
     }
   ],
-  "fps": 20.0,
-  "avgDwellTime": 59.9
+  "fps": 17.8,
+  "avgDwellTime": 8.0
 }
