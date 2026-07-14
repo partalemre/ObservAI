@@ -109,3 +109,8 @@ YAS_KATEGORILERI_GUNCELLENDI.md
 # Shell scripts (to be organized)
 start_camera.sh
 start_camera_websocket.sh
+
+# model weights (downloaded at runtime, not tracked)
+*.pt
+*.onnx
+*.mlpackage/
