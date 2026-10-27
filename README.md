@@ -4,6 +4,16 @@ Real-time camera analytics for physical spaces: visitor counting, demographics, 
 
 Three services: a Python computer-vision engine, a Node.js API, and a React dashboard.
 
+## Team and my role
+
+Bilkent University CTIS senior project, Team 12 (2025–2026): Faik Emre Partal, Halil İbrahim Atalay, Mevlüt Yılmaz, Semih Şengül, Uğur Ayberk Karakış.
+
+I coordinated the team across scope, requirements, sprint follow-up, documentation and final delivery. We built the product in three increments (20%, then 40%, then 40%) and validated it with 50 end-to-end functional scenarios before handing it in.
+
+Day-to-day work ran on a shared [`ROADMAP.md`](ROADMAP.md): every step had an owner, a status (TODO, IN PROGRESS, DONE, ASK USER) and its dependencies, so five people and their AI coding agents could work in parallel without stepping on each other.
+
+Project documents: [project management plan (SPMP)](docs/project-documents/Team12_SPMP_V2.docx) · [requirements (SRS)](docs/project-documents/Team12_SRS_V2.docx) · [design (SDD)](docs/project-documents/Team12_SDD_V1.docx) · [prototype report](docs/project-documents/Team12_Prototype_V2.docx)
+
 ## What it does
 
 - Person detection and tracking on live video (YOLO11 + OpenCV), accelerated on Apple Silicon (MPS) and NVIDIA GPUs (CUDA), with CPU fallback
